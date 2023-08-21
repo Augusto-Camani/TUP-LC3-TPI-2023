@@ -3,6 +3,20 @@ import React from "react";
 const Home = () => {
   return (
     <div>
+      <div>
+        <h1>Haciendo los sueños realidad desde 1997</h1>
+        <p>
+          Somos expertos en lo que hacemos, con más de 20 años de experiencia.
+        </p>
+        <p>
+          Brindamos instrumentos de primera calidad a toda la Argentina y
+          garantizamos su buen estado a la hora de su llegada.
+        </p>
+        <p>
+          Buscamos hacer algo tan fundamental como la música, algo accesible
+          para todos.
+        </p>
+      </div>
       <div
         id="carouselExampleIndicators"
         className="carousel slide"

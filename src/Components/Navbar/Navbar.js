@@ -5,8 +5,8 @@ const Navbar = () => {
     <div>
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            Navbar
+          <a className="navbar-brand" href="#">
+            TuxGuitars
           </a>
           <button
             class="navbar-toggler"
@@ -23,12 +23,12 @@ const Navbar = () => {
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">
-                  Home
+                  Nosotros
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
-                  Link
+                  Productos
                 </a>
               </li>
               <li class="nav-item dropdown">
