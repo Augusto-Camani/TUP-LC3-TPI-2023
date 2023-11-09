@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from "react-router";
 import NewProduct from "../NewProduct/NewProduct";
 import Products from "../Products/Products";
 import ToggleTheme from "../../ui/toggleTheme/ToggleTheme";
+import "./DashBoard.css";
 
 export const PRODUCTS = [
   {
@@ -49,24 +50,26 @@ const Dashboard = ({ onLogout }) => {
     navigate("/login");
   };
   return (
-    <>
-      <Row>
+    <div className="DashBoard">
+      <>
+        <Row className="DashBoard">
+          <Col>
+            <h1>APP de instrumentos musicales</h1>
+          </Col>
+          <Col>
+            <Button onClick={handlerLogout}>Cerrar sesión</Button>
+          </Col>
+        </Row>
+        <br />
         <Col>
-          <h1>APP de instrumentos musicales</h1>
+          <ToggleTheme />
         </Col>
-        <Col>
-          <Button onClick={handlerLogout}>Cerrar sesión</Button>
-        </Col>
-      </Row>
-      <br />
-      <Col>
-        <ToggleTheme />
-      </Col>
-      <Products
-        instrumentSelected={productSelected}
-        products={ProductsFilter}
-      />
-    </>
+        <Products
+          instrumentSelected={productSelected}
+          products={ProductsFilter}
+        />
+      </>
+    </div>
   );
 };
 
