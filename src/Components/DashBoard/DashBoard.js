@@ -4,6 +4,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router";
 import NewProduct from "../NewProduct/NewProduct";
 import Products from "../Products/Products";
+import ToggleTheme from "../../ui/toggleTheme/ToggleTheme";
 
 export const PRODUCTS = [
   {
@@ -43,41 +44,6 @@ const Dashboard = ({ onLogout }) => {
   }, []);
   const navigate = useNavigate();
 
-  const appProductsHandler = (product) => {
-    setProducts((prevProducts) => [product, ...prevProducts]);
-    setProductsFilter((prevProducts) => [product, ...prevProducts]);
-
-    const newProductId = products[products.length - 1].id + 1;
-
-    fetch("http://localhost:3000/Products", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id: newProductId,
-        instrument: products.instrument,
-        price: products.price,
-        seller: products.seller,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          throw new Error("The response had some errors");
-        }
-      })
-      .then(() => {
-        const newProductArray = [
-          { ...products, id: newProductId },
-          ...products,
-        ];
-        setProducts(newProductArray);
-        setProductsFilter(newProductArray);
-      })
-      .catch((error) => console.log(error));
-  };
-
   const handlerLogout = () => {
     onLogout();
     navigate("/login");
@@ -93,7 +59,9 @@ const Dashboard = ({ onLogout }) => {
         </Col>
       </Row>
       <br />
-      <NewProduct onProductSaved={appProductsHandler} />
+      <Col>
+        <ToggleTheme />
+      </Col>
       <Products
         instrumentSelected={productSelected}
         products={ProductsFilter}

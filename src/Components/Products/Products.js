@@ -1,5 +1,6 @@
 import ProductItem from "../productItem/ProductItem";
 import { PRODUCTS } from "../DashBoard/DashBoard";
+import "./Product.css";
 
 const Products = ({ Products }) => {
   const productMapped = PRODUCTS.map((Products, index) => (
@@ -11,7 +12,7 @@ const Products = ({ Products }) => {
     />
   ));
 
-  return <div className="books">{productMapped}</div>;
+  return <div className="product">{productMapped}</div>;
 };
 
 export default Products;

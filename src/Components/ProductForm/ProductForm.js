@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import "./ProductForm.css";
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProductForm = ({ onSaveProduct }) => {
   const [instrument, setInstrument] = useState("");
@@ -46,8 +47,8 @@ const ProductForm = ({ onSaveProduct }) => {
 
   return (
     <form>
-      <div>
-        <div>
+      <div className="new-book-controls">
+        <div className="new-book-control">
           <label>Instrumento</label>
           <input
             onChange={changeInstrumentHandler}
@@ -56,7 +57,7 @@ const ProductForm = ({ onSaveProduct }) => {
             value={instrument}
           />
         </div>
-        <div>
+        <div className="new-book-control">
           <label>Precio</label>
           <input
             onChange={changePriceHandler}
@@ -67,7 +68,7 @@ const ProductForm = ({ onSaveProduct }) => {
             step="1"
           />
         </div>
-        <div>
+        <div className="new-book-control">
           <label>Vendedor</label>
           <input
             onChange={changeSellerHandler}
@@ -77,8 +78,11 @@ const ProductForm = ({ onSaveProduct }) => {
           />
         </div>
       </div>
-      <div>
-        <Button>Cancelar</Button>
+      <div className="new-book-actions">
+        <Link to={"/home"}>
+          <Button>cancelar</Button>
+        </Link>
+
         <Button disabled={!formValid} onClick={addProductHandler}>
           Agregar Producto
         </Button>
