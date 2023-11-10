@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ProductForm from "../ProductForm/ProductForm";
+import ProductForm from "../productForm/ProductForm";
 import "./NewProduct.css";
 
 const NewProduct = ({ onProductSaved }) => {

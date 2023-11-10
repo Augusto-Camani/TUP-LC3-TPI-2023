@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Button } from "react-bootstrap";
-import { ThemeContext } from "../../services/themeContext/theme.context";
+import { ThemeContext } from "../../../services/themeContext/theme.context";
 
 const ToggleTheme = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);

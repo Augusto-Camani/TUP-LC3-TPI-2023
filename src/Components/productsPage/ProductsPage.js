@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router";
-import NewProduct from "../NewProduct/NewProduct";
-import Products from "../Products/Products";
-import ToggleTheme from "../../ui/toggleTheme/ToggleTheme";
-import "./DashBoard.css";
+import NewProduct from "../newProduct/NewProduct";
+import Products from "../products/Products";
+import ToggleTheme from "../ui/toggleTheme/ToggleTheme";
+import "./ProductsPage.css";
 
 export const PRODUCTS = [
   {
@@ -25,7 +25,7 @@ export const PRODUCTS = [
   },
 ];
 
-const Dashboard = ({ onLogout }) => {
+const ProductsPage = () => {
   const [productSelected, setProductSelected] = useState("");
   const [products, setProducts] = useState(PRODUCTS);
   const [ProductsFilter, setProductsFilter] = useState([]);
@@ -45,19 +45,12 @@ const Dashboard = ({ onLogout }) => {
   }, []);
   const navigate = useNavigate();
 
-  const handlerLogout = () => {
-    onLogout();
-    navigate("/login");
-  };
   return (
     <div className="DashBoard">
       <>
         <Row className="DashBoard">
           <Col>
             <h1>APP de instrumentos musicales</h1>
-          </Col>
-          <Col>
-            <Button onClick={handlerLogout}>Cerrar sesión</Button>
           </Col>
         </Row>
         <br />
@@ -73,4 +66,4 @@ const Dashboard = ({ onLogout }) => {
   );
 };
 
-export default Dashboard;
+export default ProductsPage;
