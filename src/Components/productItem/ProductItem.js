@@ -13,15 +13,17 @@ const ProductItem = ({ instrument, price, seller }) => {
     console.log(instrumentValue);
   };
   return (
-    <ProductCard className="product-item-container">
-      <h1>{instrumentValue}</h1>
-      <h2>el precio es: {price}</h2>
-      <h3>Vendedor: {seller}</h3>
-      <Link to={"/NewProduct"}>
-        <button>este boton es para admin</button>
-      </Link>
-      <button onClick={clickHandler}>cambiar instrumento</button>
-    </ProductCard>
+    <div className="product-item-container">
+      <ProductCard>
+        <h1>{instrumentValue}</h1>
+        <h2>el precio es: {price}</h2>
+        <h3>Vendedor: {seller}</h3>
+        <Link to={"/NewProduct"}>
+          <button>este boton es para admin</button>
+        </Link>
+        <button onClick={clickHandler}>cambiar instrumento</button>
+      </ProductCard>
+    </div>
   );
 };
 

@@ -4,7 +4,6 @@ import { Button, Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router";
 import NewProduct from "../NewProduct/NewProduct";
 import Products from "../Products/Products";
-import ToggleTheme from "../../ui/toggleTheme/ToggleTheme";
 import "./DashBoard.css";
 
 export const PRODUCTS = [
@@ -61,13 +60,14 @@ const Dashboard = ({ onLogout }) => {
           </Col>
         </Row>
         <br />
+        <Col></Col>
         <Col>
-          <ToggleTheme />
+          <Products
+            className="products"
+            instrumentSelected={productSelected}
+            products={ProductsFilter}
+          />
         </Col>
-        <Products
-          instrumentSelected={productSelected}
-          products={ProductsFilter}
-        />
       </>
     </div>
   );

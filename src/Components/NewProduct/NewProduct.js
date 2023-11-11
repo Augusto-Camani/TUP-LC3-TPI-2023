@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import ProductForm from "../ProductForm/ProductForm";
 import "./NewProduct.css";
 
