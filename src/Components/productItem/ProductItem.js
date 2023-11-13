@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import "./ProductItem.css";
 
-import ProductCard from "../ProductCard/ProductCard";
+import ProductCard from "../productCard/ProductCard";
 import { Link } from "react-router-dom";
 
 const ProductItem = ({ instrument, price, seller }) => {
@@ -13,17 +13,15 @@ const ProductItem = ({ instrument, price, seller }) => {
     console.log(instrumentValue);
   };
   return (
-    <div className="product-item-container">
-      <ProductCard>
-        <h1>{instrumentValue}</h1>
-        <h2>el precio es: {price}</h2>
-        <h3>Vendedor: {seller}</h3>
-        <Link to={"/NewProduct"}>
-          <button>este boton es para admin</button>
-        </Link>
-        <button onClick={clickHandler}>cambiar instrumento</button>
-      </ProductCard>
-    </div>
+    <ProductCard className="product-item-container">
+      <h1>{instrumentValue}</h1>
+      <h2>el precio es: {price}</h2>
+      <h3>Vendedor: {seller}</h3>
+      <Link to={"/newProduct"}>
+        <button>este boton es para admin</button>
+      </Link>
+      <button onClick={clickHandler}>cambiar instrumento</button>
+    </ProductCard>
   );
 };
 

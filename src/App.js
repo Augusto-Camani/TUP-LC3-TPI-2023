@@ -1,20 +1,19 @@
+import { useState } from "react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import Home from "./Components/Home/Home";
-import Navbar from "./Components/Navbar/Navbar";
-import Products from "./Components/Products/Products";
-import ProductItem from "./Components/productItem/ProductItem";
-import NewProduct from "./Components/NewProduct/NewProduct";
-import { Form, useAccordionButton } from "react-bootstrap";
-import ProductForm from "./Components/ProductForm/ProductForm";
 
-import { useState } from "react";
-import SingIn from "./Components/SingIn/SingIn";
-import Dashboard, { PRODUCTS } from "./Components/DashBoard/DashBoard";
-import Protected from "./Components/Security/Protected/Protected";
+import Protected from "./components/routes/Protected";
+import NotFound from "./components/routes/NotFound";
+
+import Home from "./components/home/Home";
+import Navbar from "./components/navbar/Navbar";
+import NewProduct from "./components/newProduct/NewProduct";
+import ProductsPage, { PRODUCTS } from "./components/productsPage/ProductsPage";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -23,17 +22,9 @@ import Protected from "./Components/Security/Protected/Protected";
 //Consumo de API para la gestión de datos.
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [products, setProducts] = useState(PRODUCTS);
   const [ProductsFilter, setProductsFilter] = useState([]);
 
-  const loginHandler = () => {
-    setIsLoggedIn(true);
-  };
-
-  const logoutHandler = () => {
-    setIsLoggedIn(false);
-  };
   const appProductsHandler = (product) => {
     setProducts((prevProducts) => [product, ...prevProducts]);
     setProductsFilter((prevProducts) => [product, ...prevProducts]);
@@ -71,33 +62,38 @@ const App = () => {
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },
+    { path: "*", element: <NotFound /> },
     {
-      path: "/login",
-      element: <SingIn onLoggedin={loginHandler} />,
+      path: "/editProduct",
+      element: <Protected></Protected>,
     },
+    { path: "/home", element: <Home /> },
+    { path: "/login", element: <Login /> },
     {
-      path: "/home",
+      path: "/newProduct",
       element: (
-        <Protected isSignedIn={isLoggedIn}>
-          <Dashboard onLogout={logoutHandler} />
-        </Protected>
-      ),
-    },
-    {
-      path: "/NewProduct",
-      element: (
-        <Protected isSignedIn={isLoggedIn}>
+        <Protected>
           <NewProduct onProductSaved={appProductsHandler} />
         </Protected>
       ),
     },
     {
-      path: "/EditProduct",
-      element: <Protected isSignedIn={isLoggedIn}></Protected>,
+      path: "/products",
+      element: (
+        <Protected>
+          <ProductsPage />
+        </Protected>
+      ),
     },
+    { path: "/register", element: <Register /> },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Navbar />
+      <RouterProvider router={router} />
+    </>
+  );
 };
 
 export default App;

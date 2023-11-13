@@ -1,6 +1,6 @@
 import ProductItem from "../productItem/ProductItem";
-import { PRODUCTS } from "../DashBoard/DashBoard";
-import "./Product.css";
+import { PRODUCTS } from "../productsPage/ProductsPage";
+import "./Products.css";
 
 const Products = ({ Products }) => {
   const productMapped = PRODUCTS.map((Products, index) => (
