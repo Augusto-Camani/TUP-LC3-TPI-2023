@@ -2,16 +2,15 @@ import { useState } from "react";
 
 import "./ProductItem.css";
 
-import ProductCard from "../ProductCard/ProductCard";
-import Products from "../Products/Products";
+import ProductCard from "../productCard/ProductCard";
 
 const ProductItem = ({ instrument, price, seller }) => {
   const [instrumentValue, setInstrumentValue] = useState(instrument);
+
   const clickHandler = () => {
-    console.log("CLICKED");
     setInstrumentValue("¡actualizado!");
-    console.log(instrumentValue);
   };
+
   return (
     <ProductCard className="product-item-container">
       <h1>{instrumentValue}</h1>

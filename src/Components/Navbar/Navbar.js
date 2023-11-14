@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   Button,
   Container,
@@ -7,11 +8,17 @@ import {
   NavDropdown,
 } from "react-bootstrap";
 
+import { useAuth } from "../../services/authenticationContext/authentication.context";
+
 const NavBar = () => {
+  const { user } = useAuth();
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="home">TuxGuitars</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/home">
+          TuxGuitars
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -19,19 +26,22 @@ const NavBar = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link href="products">Productos</Nav.Link>
-            <Nav.Link href="cart">Carrito</Nav.Link>
+            <Nav.Link as={Link} to="/products">
+              Productos
+            </Nav.Link>
+            <Nav.Link as={Link} to="/cart">
+              Carrito
+            </Nav.Link>
             <NavDropdown title="Cuenta" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
-                Another action
+              <NavDropdown.Item disabled={!user} as={Link} to="/login">
+                Cambiar contraseña
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
+              <NavDropdown.Item as={Link} to={user ? "/logout" : "/login"}>
+                {user ? "Cerrar sesión" : "Iniciar sesión"}
               </NavDropdown.Item>
             </NavDropdown>
-            {/* <Nav.Link href="#" disabled>
+            {/* <Nav.Link to="#" disabled>
                 Link
               </Nav.Link> */}
           </Nav>

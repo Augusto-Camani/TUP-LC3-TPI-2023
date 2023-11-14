@@ -1,18 +1,21 @@
-import { useCallback, useState } from "react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
+import { Spinner } from "react-bootstrap";
 
-import Protected from "./Components/routes/Protected";
-import NotFound from "./Components/routes/NotFound";
-import Login from "./Components/login/Login";
-import Home from "./Components/Home/Home";
-import Navbar from "./Components/Navbar/Navbar";
-import NewProduct from "./Components/NewProduct/NewProduct";
-import ProductsPage, { PRODUCTS } from "./Components/productsPage/ProductsPage";
-import Register from "./Components/register/Register";
+import { useAPI } from "./services/apiContext/api.context";
+import AlreadySigned from "./components/routes/AlreadySigned";
+import Logout from "./components/routes/Logout";
+import NotFound from "./components/routes/NotFound";
+import Protected from "./components/routes/Protected";
+import Navbar from "./components/navbar/Navbar";
+import Home from "./components/home/Home";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
+import ProductsPage from "./components/productsPage/ProductsPage";
+import NewProduct from "./components/newProduct/NewProduct";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -21,80 +24,82 @@ import Register from "./Components/register/Register";
 //Consumo de API para la gestión de datos.
 
 const App = () => {
-  const [products, setProducts] = useState(PRODUCTS);
-  const [ProductsFilter, setProductsFilter] = useState([]);
-
-  const appProductsHandler = useCallback(
-    (product) => {
-      setProducts((prevProducts) => [...prevProducts, product]);
-      setProductsFilter((prevProducts) => [...prevProducts, product]);
-
-      const newProductId = products[products.length - 1].id + 1;
-
-      fetch("http://localhost:8000/products", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          id: newProductId,
-          instrument: product.instrument,
-          price: product.price,
-          seller: product.seller,
-        }),
-      })
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            throw new Error("The response had some errors");
-          }
-        })
-        .then(() => {
-          const newProductArray = [
-            { ...product, id: newProductId },
-            ...products,
-          ];
-          setProducts(newProductArray);
-          setProductsFilter(newProductArray);
-        })
-        .catch((error) => console.log(error));
-    },
-    [products]
-  );
+  const { isLoading } = useAPI();
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },
     { path: "*", element: <NotFound /> },
     {
-      path: "/editProduct",
-      element: <Protected></Protected>,
+      path: "/home",
+      element: (
+        <>
+          <Navbar />
+          <Home />
+        </>
+      ),
     },
-    { path: "/home", element: <Home /> },
-    { path: "/login", element: <Login /> },
     {
-      path: "/newProduct",
+      path: "/login",
+      element: (
+        <AlreadySigned>
+          <Navbar />
+          <Login />
+        </AlreadySigned>
+      ),
+    },
+    {
+      path: "/logout",
       element: (
         <Protected>
-          <NewProduct onProductSaved={appProductsHandler} />
+          <Logout />
         </Protected>
+      ),
+    },
+    {
+      path: "/register",
+      element: (
+        <AlreadySigned>
+          <Navbar />
+          <Register />
+        </AlreadySigned>
       ),
     },
     {
       path: "/products",
       element: (
         <Protected>
+          <Navbar />
           <ProductsPage />
         </Protected>
       ),
     },
-    { path: "/register", element: <Register /> },
+    {
+      path: "/newProduct",
+      element: (
+        <Protected>
+          <Navbar />
+          <NewProduct />
+        </Protected>
+      ),
+    },
+    {
+      path: "/editProduct",
+      element: (
+        <Protected>
+          <Navbar />
+          {/* <EditProduct /> */}
+        </Protected>
+      ),
+    },
   ]);
 
   return (
-    <>
-      <Navbar />
+    <div className={isLoading ? "opacity-75" : undefined}>
+      {isLoading && (
+        <Spinner className="d-flex justify-content-center align-items-center" />
+      )}
       <RouterProvider router={router} />
-    </>
+    </div>
   );
 };
 

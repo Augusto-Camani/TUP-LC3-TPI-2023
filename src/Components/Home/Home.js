@@ -21,21 +21,21 @@ const Home = () => {
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="https://i.imgur.com/GmboyTB.jpg"
+            src="./Images/01.jpeg"
             alt="First slide"
           />
         </Carousel.Item>
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="https://i.imgur.com/XaJCZ4t.jpg"
+            src="./Images/02.jpeg"
             alt="Second slide"
           />
         </Carousel.Item>
         <Carousel.Item>
           <img
             className="d-block w-100"
-            src="https://i.imgur.com/tzVZf2A.jpg"
+            src="./Images/03.jpeg"
             alt="Third slide"
           />
         </Carousel.Item>

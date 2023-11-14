@@ -7,11 +7,11 @@ import "./Login.css";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Login = () => {
+  const { handleLogin } = useAuth();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const { handleLogin } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Login = () => {
   const handleChange = ({ target: { value, name } }) =>
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
 
-  const handleResetPassword = async (event) => {
+  /* const handleResetPassword = async (event) => {
     event.preventDefault();
     if (!user.email) return setError("Write an email to reset password");
     try {
@@ -39,7 +39,7 @@ const Login = () => {
     } catch (error) {
       setError(error.message);
     }
-  };
+  }; */
 
   return (
     <>
@@ -63,12 +63,12 @@ const Login = () => {
           />
         </Form.Group>
         <Button type="submit">Sign In</Button>
-        <a href="#!" onClick={handleResetPassword}>
+        {/* <a href="#!" onClick={handleResetPassword}>
           Forgot Password?
-        </a>
+        </a> */}
       </Form>
       <p>
-        Don't have an account?
+        ¿No tienes una cuenta?
         <Link to="/register">Register</Link>
       </p>
       <Alert

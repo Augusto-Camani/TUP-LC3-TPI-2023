@@ -13,13 +13,11 @@ const ProductForm = ({ onSaveProduct }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log("check form");
       const isValid = instrument !== "" && price !== "" && seller !== "";
       setFormValid(isValid);
-    }, 500);
+    }, 300);
 
     return () => {
-      console.log("Cleanup");
       clearTimeout(timer);
     };
   }, [instrument, price, seller]);
@@ -79,7 +77,7 @@ const ProductForm = ({ onSaveProduct }) => {
         </div>
       </div>
       <div className="new-book-actions">
-        <Link to={"/home"}>
+        <Link to={"/products"}>
           <Button>cancelar</Button>
         </Link>
         <Button disabled={!formValid} onClick={addProductHandler}>

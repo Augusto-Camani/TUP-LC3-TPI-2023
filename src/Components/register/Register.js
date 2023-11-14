@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Register = () => {
-  //const { signup } = useAuth();
+  const { handleLogin } = useAuth();
 
   const [user, setUser] = useState({
     email: "",
@@ -48,7 +49,7 @@ const Register = () => {
       return;
     }
     try {
-      //await signup(user.email, user.password);
+      await handleLogin(user.email); //, user.password
       navigate("/");
     } catch (error) {
       setError(error.message);
@@ -67,32 +68,32 @@ const Register = () => {
             type="email"
             name="email"
             onChange={handleChange}
-            placeholder="Email"
+            placeholder="email"
           />
           <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
+            Nunca compartiremos su dirección de correo electrónico.
           </Form.Text>
           <Alert variant="danger" show={errors[0].isError}>
             {errors[0].text}
           </Alert>
         </Form.Group>
         <Form.Group>
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="password"
             name="password"
             onChange={handleChange}
-            placeholder="Password"
+            placeholder="contraseña"
           />
           <Alert className="Alert" show={errors[1].isError} variant="danger">
             {errors[1].text}
           </Alert>
         </Form.Group>
-        <Button type="submit">Register</Button>
+        <Button type="submit">Registrarse</Button>
       </Form>
       <p>
         Already have an Account?
-        <Link to="/login">Login</Link>
+        <Link to="/login">Iniciar sesión</Link>
       </p>
       <Alert className="Alert" show={error} variant="danger">
         {error}

@@ -1,11 +1,11 @@
-import ProductItem from "../productItem/ProductItem";
-import { PRODUCTS } from "../productsPage/ProductsPage";
 import { memo } from "react";
+
 import "./Products.css";
 
+import ProductItem from "../productItem/ProductItem";
+
 const Products = memo(({ products }) => {
-  console.log("In Books");
-  const productMapped = products.map((products, index) => (
+  const productsMapped = products.map((products) => (
     <ProductItem
       key={products.id}
       instrument={products.instrument}
@@ -16,7 +16,7 @@ const Products = memo(({ products }) => {
 
   return (
     <div className="product">
-      {productMapped.length > 0 ? productMapped : <h3>no</h3>}
+      {productsMapped.length > 0 ? productsMapped : <h3>no</h3>}
     </div>
   );
 });

@@ -1,18 +1,22 @@
-import { memo } from "react";
-
-import ProductForm from "../ProductForm/ProductForm";
-
 import "./NewProduct.css";
 
-const NewProduct = memo(({ onProductSaved }) => {
+import { useAPI } from "../../services/apiContext/api.context";
+import { useGetProducts } from "../../custom/useAPIMethods/useAPIMethods";
+import ProductForm from "../productForm/ProductForm";
+
+const NewProduct = () => {
+  const { postProducts } = useAPI();
   const saveProductHandler = (product) => {
-    onProductSaved(product);
+    postProducts(product);
   };
+
+  useGetProducts();
+
   return (
     <div className="new-product">
       <ProductForm onSaveProduct={saveProductHandler} />
     </div>
   );
-});
+};
 
 export default NewProduct;
