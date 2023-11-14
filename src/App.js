@@ -1,19 +1,18 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Navigate,
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
 
-import Protected from "./components/routes/Protected";
-import NotFound from "./components/routes/NotFound";
-
-import Home from "./components/home/Home";
-import Navbar from "./components/navbar/Navbar";
-import NewProduct from "./components/newProduct/NewProduct";
-import ProductsPage, { PRODUCTS } from "./components/productsPage/ProductsPage";
-import Login from "./components/login/Login";
-import Register from "./components/register/Register";
+import Protected from "./Components/routes/Protected";
+import NotFound from "./Components/routes/NotFound";
+import Login from "./Components/login/Login";
+import Home from "./Components/Home/Home";
+import Navbar from "./Components/Navbar/Navbar";
+import NewProduct from "./Components/NewProduct/NewProduct";
+import ProductsPage, { PRODUCTS } from "./Components/productsPage/ProductsPage";
+import Register from "./Components/register/Register";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -25,40 +24,44 @@ const App = () => {
   const [products, setProducts] = useState(PRODUCTS);
   const [ProductsFilter, setProductsFilter] = useState([]);
 
-  const appProductsHandler = (product) => {
-    setProducts((prevProducts) => [product, ...prevProducts]);
-    setProductsFilter((prevProducts) => [product, ...prevProducts]);
+  const appProductsHandler = useCallback(
+    (product) => {
+      console.log(products);
+      setProducts((prevProducts) => [...prevProducts, product]);
+      setProductsFilter((prevProducts) => [...prevProducts, product]);
 
-    const newProductId = products[products.length - 1].id + 1;
+      const newProductId = products[products.length - 1].id + 1;
 
-    fetch("http://localhost:3000/Products", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        id: newProductId,
-        instrument: products.instrument,
-        price: products.price,
-        seller: products.seller,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          throw new Error("The response had some errors");
-        }
+      fetch("http://localhost:8000/products", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id: newProductId,
+          instrument: product.instrument,
+          price: product.price,
+          seller: product.seller,
+        }),
       })
-      .then(() => {
-        const newProductArray = [
-          { ...products, id: newProductId },
-          ...products,
-        ];
-        setProducts(newProductArray);
-        setProductsFilter(newProductArray);
-      })
-      .catch((error) => console.log(error));
-  };
+        .then((response) => {
+          if (response.ok) return response.json();
+          else {
+            throw new Error("The response had some errors");
+          }
+        })
+        .then(() => {
+          const newProductArray = [
+            ...products,
+            { ...product, id: newProductId },
+          ];
+          setProducts(newProductArray);
+          setProductsFilter(newProductArray);
+        })
+        .catch((error) => console.log(error));
+    },
+    [products]
+  );
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },

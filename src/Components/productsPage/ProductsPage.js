@@ -1,24 +1,27 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router";
-import NewProduct from "../newProduct/NewProduct";
-import Products from "../products/Products";
-import ToggleTheme from "../ui/toggleTheme/ToggleTheme";
+import NewProduct from "../NewProduct/NewProduct";
+import Products from "../Products/Products";
+
 import "./ProductsPage.css";
 
 export const PRODUCTS = [
   {
+    id: 1,
     instrument: "bateria",
     price: 420,
     seller: "Baterias S.A",
   },
   {
+    id: 2,
     instrument: "trompeta",
     price: 840,
     seller: "Trompetas S.A",
   },
   {
+    id: 3,
     instrument: "guitarra",
     price: 1200,
     seller: "Guitarras S.R.L",
@@ -31,7 +34,7 @@ const ProductsPage = () => {
   const [ProductsFilter, setProductsFilter] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/Products", {
+    fetch("http://localhost:8000/products", {
       headers: {
         accept: "application/json",
       },
@@ -43,24 +46,13 @@ const ProductsPage = () => {
       })
       .catch((error) => console.log(error));
   }, []);
-  const navigate = useNavigate();
 
   return (
     <div className="DashBoard">
       <>
-        <Row className="DashBoard">
-          <Col>
-            <h1>APP de instrumentos musicales</h1>
-          </Col>
-        </Row>
+        <Row className="DashBoard"></Row>
         <br />
-        <Col>
-          <ToggleTheme />
-        </Col>
-        <Products
-          instrumentSelected={productSelected}
-          products={ProductsFilter}
-        />
+        <Products products={ProductsFilter} />
       </>
     </div>
   );
