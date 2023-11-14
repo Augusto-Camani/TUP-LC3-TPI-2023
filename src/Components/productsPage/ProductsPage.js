@@ -1,9 +1,10 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router";
 import NewProduct from "../NewProduct/NewProduct";
 import Products from "../Products/Products";
+import { APIContext } from "../../services/apiContext/API.Context";
 
 import "./ProductsPage.css";
 
@@ -33,7 +34,10 @@ const ProductsPage = () => {
   const [products, setProducts] = useState(PRODUCTS);
   const [ProductsFilter, setProductsFilter] = useState([]);
 
+  const { toggleLoading } = useContext(APIContext);
+
   useEffect(() => {
+    toggleLoading(true);
     fetch("http://localhost:8000/products", {
       headers: {
         accept: "application/json",
@@ -41,10 +45,14 @@ const ProductsPage = () => {
     })
       .then((response) => response.json())
       .then((productsData) => {
+        toggleLoading(false);
         setProducts(productsData);
         setProductsFilter(productsData);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        toggleLoading(false);
+        console.log(error);
+      });
   }, []);
 
   return (

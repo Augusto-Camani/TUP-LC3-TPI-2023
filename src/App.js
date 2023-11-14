@@ -26,7 +26,6 @@ const App = () => {
 
   const appProductsHandler = useCallback(
     (product) => {
-      console.log(products);
       setProducts((prevProducts) => [...prevProducts, product]);
       setProductsFilter((prevProducts) => [...prevProducts, product]);
 
@@ -52,8 +51,8 @@ const App = () => {
         })
         .then(() => {
           const newProductArray = [
-            ...products,
             { ...product, id: newProductId },
+            ...products,
           ];
           setProducts(newProductArray);
           setProductsFilter(newProductArray);

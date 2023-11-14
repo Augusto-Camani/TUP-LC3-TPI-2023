@@ -5,7 +5,7 @@ import "./Products.css";
 
 const Products = memo(({ products }) => {
   console.log("In Books");
-  const productMapped = PRODUCTS.map((products, index) => (
+  const productMapped = products.map((products, index) => (
     <ProductItem
       key={products.id}
       instrument={products.instrument}
