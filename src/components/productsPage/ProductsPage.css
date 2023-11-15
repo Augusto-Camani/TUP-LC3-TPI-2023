@@ -1,0 +1,38 @@
+.DashBoard {
+   
+    padding: 1rem;
+    
+    
+    
+    
+    text-align: center;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+  }
+  
+  .DashBoard button {
+    font: inherit;
+    cursor: pointer;
+    padding: 1rem 2rem;
+    border: 1px solid rgb(25, 25, 99);
+    background-color: rgb(25, 25, 99);
+    color: white;
+    border-radius: 12px;
+    margin-right: 1rem;
+  }
+  
+  .DashBoard button:hover,
+  .DashBoard  button:active {
+    background-color: rgb(55, 55, 165);
+    border-color: rgb(55, 55, 165);
+  }
+  
+  .DashBoard  button.alternative {
+    color: #220131;
+    border-color: transparent;
+    background-color: transparent;
+  }
+  
+  .new-book button.alternative:hover,
+  .new-book button.alternative:active {
+    background-color: #ddb3f8;
+  }
