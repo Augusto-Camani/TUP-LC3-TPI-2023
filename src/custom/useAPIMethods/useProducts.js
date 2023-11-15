@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useAPI } from "../../services/apiContext/api.context";
 
-export const useGetProducts = () => {
+const useProducts = () => {
   const { toggleLoading, products, setProducts, setProductsFiltered } =
     useAPI();
 
@@ -27,14 +27,4 @@ export const useGetProducts = () => {
   }, []);
 };
 
-export const usePostProducts = () => {
-  return;
-};
-
-export const usePutProducts = () => {
-  return;
-};
-
-export const usePatchProducts = () => {
-  return;
-};
+export default useProducts;

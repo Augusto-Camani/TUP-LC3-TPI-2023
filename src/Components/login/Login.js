@@ -7,7 +7,7 @@ import "./Login.css";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Login = () => {
-  const { handleLogin } = useAuth();
+  const { loginHandler } = useAuth();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -15,61 +15,53 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     setError("");
 
     try {
-      await handleLogin(user.email, user.password);
+      await loginHandler(user.email, user.password);
       navigate("/");
     } catch (error) {
-      setError(error.message);
+      if (error.message)
+        setError(
+          "Fallo al iniciar sesión.\nPor favor intente de nuevo más tarde."
+        );
+      else setError(error.message);
     }
   };
 
-  const handleChange = ({ target: { value, name } }) =>
+  const changeHandler = ({ target: { value, name } }) =>
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
-
-  /* const handleResetPassword = async (event) => {
-    event.preventDefault();
-    if (!user.email) return setError("Write an email to reset password");
-    try {
-      //await resetPassword(user.email);
-      setError("We sent you an email. Check your inbox");
-    } catch (error) {
-      setError(error.message);
-    }
-  }; */
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={submitHandler}>
         <Form.Group>
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             name="email"
-            onChange={handleChange}
+            value={user.email}
+            onChange={changeHandler}
             placeholder="Email"
           />
         </Form.Group>
         <Form.Group>
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="password"
             name="password"
-            onChange={handleChange}
-            placeholder="Password"
+            value={user.password}
+            onChange={changeHandler}
+            placeholder="Contraseña"
           />
         </Form.Group>
-        <Button type="submit">Sign In</Button>
-        {/* <a href="#!" onClick={handleResetPassword}>
-          Forgot Password?
-        </a> */}
+        <Button type="submit">Iniciar Sesión</Button>
       </Form>
       <p>
         ¿No tienes una cuenta?
-        <Link to="/register">Register</Link>
+        <Link to="/register">Registrarse</Link>
       </p>
       <Alert
         className="Alert"

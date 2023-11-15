@@ -5,8 +5,7 @@ import { Alert, Button, Form } from "react-bootstrap";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Register = () => {
-  const { handleLogin } = useAuth();
-
+  const { registerHandler } = useAuth();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -22,7 +21,7 @@ const Register = () => {
   ]);
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
     const newErrors = [...errors];
 
@@ -49,25 +48,25 @@ const Register = () => {
       return;
     }
     try {
-      await handleLogin(user.email); //, user.password
+      await registerHandler(user.email, user.password);
       navigate("/");
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const handleChange = ({ target: { value, name } }) =>
+  const changeHandler = ({ target: { value, name } }) =>
     setUser({ ...user, [name]: value });
 
   return (
     <div>
-      <Form className="registerForm" onSubmit={handleSubmit}>
+      <Form className="registerForm" onSubmit={submitHandler}>
         <Form.Group class="mb-3" controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             name="email"
-            onChange={handleChange}
+            onChange={changeHandler}
             placeholder="email"
           />
           <Form.Text className="text-muted">
@@ -82,7 +81,7 @@ const Register = () => {
           <Form.Control
             type="password"
             name="password"
-            onChange={handleChange}
+            onChange={changeHandler}
             placeholder="contraseña"
           />
           <Alert className="Alert" show={errors[1].isError} variant="danger">

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const APIContext = createContext();
 
@@ -17,44 +17,67 @@ export const APIContextProvider = ({ children }) => {
     setIsLoading(value);
   };
 
-  const postProducts = useCallback(
-    async (product) => {
-      setProducts((prevProducts) => [...prevProducts, product]);
-      setProductsFiltered((prevProducts) => [...prevProducts, product]);
+  const postProduct = async (product) => {
+    const newProduct = { id: products[products.length - 1].id + 1, ...product };
 
-      console.log(products);
-      const newProductId = products[products.length - 1].id + 1;
-
-      await fetch("http://localhost:8000/products", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          id: newProductId,
-          instrument: product.instrument,
-          price: product.price,
-          seller: product.seller,
-        }),
+    await fetch("http://localhost:8000/products", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(newProduct),
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          throw new Error("The response had some errors");
+        }
       })
-        .then((response) => {
-          if (response.ok) return response.json();
-          else {
-            throw new Error("The response had some errors");
-          }
-        })
-        .then(() => {
-          const newProductArray = [
-            { ...product, id: newProductId },
-            ...products,
-          ];
-          setProducts(newProductArray);
-          setProductsFiltered(newProductArray);
-        })
-        .catch((error) => console.log(error));
-    },
-    [products]
-  );
+      .then(() => {
+        setProducts((prevProducts) => [...prevProducts, newProduct]);
+        setProductsFiltered((prevProducts) => [...prevProducts, newProduct]);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const putProduct = async (product) => {
+    await fetch(`http://localhost:8000/products/${product.id}`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(product),
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          throw new Error("The response had some errors");
+        }
+      })
+      .then(() => {
+        setProducts((prevProducts) => [...prevProducts, product]);
+        setProductsFiltered((prevProducts) => [...prevProducts, product]);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const deleteProduct = async (product) => {
+    await fetch(`http://localhost:8000/products/${product.id}`, {
+      method: "DELETE",
+      headers: { "content-type": "application/json" },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else {
+          throw new Error("The response had some errors");
+        }
+      })
+      .then(() => {
+        setProducts((prevProducts) =>
+          prevProducts.filter((p) => p.id !== product.id)
+        );
+        setProductsFiltered((prevProducts) =>
+          prevProducts.filter((p) => p.id !== product.id)
+        );
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <APIContext.Provider
@@ -65,7 +88,9 @@ export const APIContextProvider = ({ children }) => {
         setProducts,
         productsFiltered,
         setProductsFiltered,
-        postProducts,
+        postProduct,
+        putProduct,
+        deleteProduct,
       }}
     >
       {children}

@@ -4,13 +4,13 @@ import { useAuth } from "../../services/authenticationContext/authentication.con
 import { useAPI } from "../../services/apiContext/api.context";
 
 const Logout = () => {
-  const { handleLogout } = useAuth();
+  const { logoutHandler } = useAuth();
   const { toggleLoading } = useAPI();
   const navigate = useNavigate();
 
   useEffect(() => {
     toggleLoading(true);
-    handleLogout();
+    logoutHandler();
     navigate("/", { replace: true });
     toggleLoading(false);
   }, []);

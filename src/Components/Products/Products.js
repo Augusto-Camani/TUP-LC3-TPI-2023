@@ -1,24 +1,25 @@
-import { memo } from "react";
-
 import "./Products.css";
 
 import ProductItem from "../productItem/ProductItem";
 
-const Products = memo(({ products }) => {
+const Products = ({ products }) => {
   const productsMapped = products.map((products) => (
     <ProductItem
-      key={products.id}
       instrument={products.instrument}
       price={products.price}
-      seller={products.seller}
+      stock={products.stock}
     />
   ));
 
   return (
     <div className="product">
-      {productsMapped.length > 0 ? productsMapped : <h3>no</h3>}
+      {productsMapped.length > 0 ? (
+        productsMapped
+      ) : (
+        <h3>No se encontraron productos</h3>
+      )}
     </div>
   );
-});
+};
 
 export default Products;

@@ -1,39 +1,66 @@
 .new-product {
-    background-color: rgb(28, 91, 110);
-    padding: 1rem;
-    margin: 2rem auto;
-    width: 50rem;
-    max-width: 95%;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
-  }
-  
-  .new-product button {
-    font: inherit;
-    cursor: pointer;
-    padding: 1rem 2rem;
-    border: 1px solid rgb(25, 25, 99);
-    background-color: rgb(25, 25, 99);
-    color: white;
-    border-radius: 12px;
-    margin-right: 1rem;
-  }
-  
-  .new-product button:hover,
-  .new-product button:active {
-    background-color: rgb(55, 55, 165);
-    border-color: rgb(55, 55, 165);
-  }
-  
-  .new-product button.alternative {
-    color: #220131;
-    border-color: transparent;
-    background-color: transparent;
-  }
-  
-  .new-product button.alternative:hover,
-  .new-product button.alternative:active {
-    background-color: #ddb3f8;
-  }
-  
+  background-color: rgb(28, 91, 110);
+  padding: 1rem;
+  margin: 2rem auto;
+  width: 50rem;
+  max-width: 95%;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+}
+
+.new-product button {
+  font: inherit;
+  cursor: pointer;
+  padding: 1rem 2rem;
+  border: 1px solid rgb(25, 25, 99);
+  background-color: rgb(25, 25, 99);
+  color: white;
+  border-radius: 12px;
+  margin-right: 1rem;
+}
+
+.new-product button:hover,
+.new-product button:active {
+  background-color: rgb(55, 55, 165);
+  border-color: rgb(55, 55, 165);
+}
+
+.new-product button.alternative {
+  color: #220131;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.new-product button.alternative:hover,
+.new-product button.alternative:active {
+  background-color: #ddb3f8;
+}
+
+.new-book-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.new-book-control label {
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.new-book-actions {
+  text-align: right;
+}
+
+.input-control {
+  font: inherit;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 20rem;
+  max-width: 100%;
+}

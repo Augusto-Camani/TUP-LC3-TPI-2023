@@ -3,13 +3,13 @@ import { Button, Col, Row } from "react-bootstrap";
 import "./ProductsPage.css";
 
 import { useAPI } from "../../services/apiContext/api.context";
-import { useGetProducts } from "../../custom/useAPIMethods/useAPIMethods";
+import useProducts from "../../custom/useAPIMethods/useProducts";
 import Products from "../products/Products";
 
 const ProductsPage = () => {
   const { productsFiltered } = useAPI();
 
-  useGetProducts();
+  useProducts();
 
   return (
     <div className="DashBoard">
