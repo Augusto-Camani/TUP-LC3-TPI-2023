@@ -10,9 +10,7 @@ const useProducts = () => {
     if (products.length > 0) return;
     toggleLoading(true);
     fetch("http://localhost:8000/products", {
-      headers: {
-        accept: "application/json",
-      },
+      headers: { "content-type": "application/json" },
     })
       .then((response) => response.json())
       .then((productsData) => {
