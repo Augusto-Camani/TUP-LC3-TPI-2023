@@ -84,7 +84,12 @@ const NewProduct = () => {
           <Button as={Link} to="/products">
             Cancelar
           </Button>
-          <Button disabled={!formValid} onClick={addProductHandler}>
+          <Button
+            disabled={!formValid}
+            onClick={addProductHandler}
+            as={Link}
+            to="/products"
+          >
             Agregar Producto
           </Button>
         </Form.Group>

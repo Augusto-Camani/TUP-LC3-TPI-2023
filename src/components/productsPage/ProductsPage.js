@@ -6,6 +6,8 @@ import { useAPI } from "../../services/apiContext/api.context";
 import useProducts from "../../custom/useAPIMethods/useProducts";
 import Products from "../products/Products";
 
+import { Link } from "react-router-dom";
+
 const ProductsPage = () => {
   const { productsFiltered } = useAPI();
 

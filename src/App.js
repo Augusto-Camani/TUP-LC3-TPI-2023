@@ -16,6 +16,7 @@ import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import ProductsPage from "./components/productsPage/ProductsPage";
 import NewProduct from "./components/newProduct/NewProduct";
+import ManagerProducts from "./components/managerProducts/ManagerProducts";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -25,6 +26,9 @@ import NewProduct from "./components/newProduct/NewProduct";
 
 const App = () => {
   const { isLoading } = useAPI();
+  const user = ["user", "admin", "sysadmin"];
+  const admin = ["admin", "sysadmin"];
+  const sysadmin = ["sysadmin"];
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },
@@ -74,11 +78,20 @@ const App = () => {
       ),
     },
     {
-      path: "/newProduct",
+      path: "/newproduct",
       element: (
         <Protected>
           <Navbar />
           <NewProduct />
+        </Protected>
+      ),
+    },
+    {
+      path: "/manageproducts",
+      element: (
+        <Protected>
+          <Navbar />
+          <ManagerProducts />
         </Protected>
       ),
     },
