@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Form } from "react-bootstrap";
 
-import "./Login.css";
-
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Login = () => {
@@ -23,11 +21,7 @@ const Login = () => {
       await loginHandler(user.email, user.password);
       navigate("/");
     } catch (error) {
-      if (error.message)
-        setError(
-          "Fallo al iniciar sesión.\nPor favor intente de nuevo más tarde."
-        );
-      else setError(error.message);
+      setError(error.message);
     }
   };
 
@@ -35,9 +29,9 @@ const Login = () => {
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
 
   return (
-    <>
+    <div className="container w-50">
       <Form onSubmit={submitHandler}>
-        <Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -46,8 +40,9 @@ const Login = () => {
             onChange={changeHandler}
             placeholder="Email"
           />
+          <br />
         </Form.Group>
-        <Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="password"
@@ -57,24 +52,19 @@ const Login = () => {
             placeholder="Contraseña"
           />
         </Form.Group>
-        <Button type="submit">Iniciar Sesión</Button>
+        <Button className="mb-1" type="submit">
+          Iniciar Sesión
+        </Button>
       </Form>
-      <p>
-        ¿No tienes una cuenta?
-        <Link to="/register">Registrarse</Link>
+      <p className="mb-3">
+        ¿No tiene una cuenta? <Link to="/register">Registrarse</Link>
       </p>
-      <Alert
-        className="Alert"
-        show={error}
-        variant={
-          error === "We sent you an email. Check your inbox"
-            ? "primary"
-            : "danger"
-        }
-      >
-        {error}
-      </Alert>
-    </>
+      {error && (
+        <Alert className="Alert" variant="danger">
+          {error}
+        </Alert>
+      )}
+    </div>
   );
 };
 

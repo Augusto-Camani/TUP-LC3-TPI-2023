@@ -32,6 +32,31 @@ const NavBar = () => {
             <Nav.Link as={Link} to="/cart">
               Carrito
             </Nav.Link>
+            {["sysadmin", "admin"].includes(
+              user ? user.userType : "unsigned"
+            ) && (
+              <NavDropdown title="Administrar" id="navbarScrollingDropdown">
+                {user.userType === "admin" ? (
+                  <NavDropdown.Item as={Link} to="/manageproducts">
+                    Productos
+                  </NavDropdown.Item>
+                ) : (
+                  user.userType === "sysadmin" && (
+                    <>
+                      <NavDropdown.Item as={Link} to="/manageproducts">
+                        Productos
+                      </NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/manageusers">
+                        Usuarios
+                      </NavDropdown.Item>
+                      <NavDropdown.Item as={Link} to="/managesales">
+                        Ventas
+                      </NavDropdown.Item>
+                    </>
+                  )
+                )}
+              </NavDropdown>
+            )}
             <NavDropdown title="Cuenta" id="navbarScrollingDropdown">
               <NavDropdown.Item disabled={!user} as={Link} to="/login">
                 Cambiar contraseña

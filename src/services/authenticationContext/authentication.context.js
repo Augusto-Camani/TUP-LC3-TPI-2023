@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
+import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
+
 const AuthenticationContext = createContext();
 
 const userValue = JSON.parse(localStorage.getItem("user"));
@@ -21,12 +23,11 @@ export const AuthenticationContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else {
+        else
           throw new Error(
             "No se encontró un usuario con las credenciales proporcionadas"
           );
-        }
-      })
+      }, useCatchRejectedFetch)
       .then((response) => {
         const currentUser = {
           id: response.id,
@@ -58,9 +59,11 @@ export const AuthenticationContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else {
-          throw new Error("The response had some errors");
+          throw new Error(
+            "No se pudo registrar su usuario. Intentelo de nuevo"
+          );
         }
-      })
+      }, useCatchRejectedFetch)
       .then((response) => {
         const currentUser = {
           id: response.id,
@@ -71,6 +74,9 @@ export const AuthenticationContextProvider = ({ children }) => {
         };
         setUser(currentUser);
         localStorage.setItem("user", JSON.stringify(currentUser));
+      })
+      .catch(() => {
+        throw new Error("Error de servidor. Intentelo de nuevo más tarde");
       });
   };
 

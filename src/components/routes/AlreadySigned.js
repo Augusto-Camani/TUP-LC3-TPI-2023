@@ -4,7 +4,7 @@ import { useAuth } from "../../services/authenticationContext/authentication.con
 
 const AlreadySigned = ({ children }) => {
   const { user } = useAuth();
-  return !user ? children : <Navigate to="/" replace />;
+  return user ? <Navigate to="/" replace /> : children;
 };
 
 export default AlreadySigned;

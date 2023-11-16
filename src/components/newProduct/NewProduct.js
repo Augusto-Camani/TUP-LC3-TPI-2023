@@ -6,10 +6,12 @@ import "./NewProduct.css";
 
 import useProducts from "../../custom/useAPIMethods/useProducts";
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const NewProduct = () => {
   const instrumentObject = { instrument: "", price: 0, stock: 0 };
   const { postProduct } = useAPI();
+  const { user } = useAuth();
   const [instrument, setInstrument] = useState(instrumentObject);
   const [formValid, setFormValid] = useState(false);
 
@@ -36,7 +38,7 @@ const NewProduct = () => {
     }));
 
   const addProductHandler = () => {
-    postProduct(instrument);
+    postProduct(instrument, user.accessToken);
     setInstrument(instrumentObject);
   };
 

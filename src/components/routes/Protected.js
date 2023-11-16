@@ -2,12 +2,13 @@ import { Navigate } from "react-router";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const Protected = ({ children }) => {
+const Protected = ({ children, allowedRole = ["sysadmin"] }) => {
   const { user } = useAuth();
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
+  return allowedRole.includes(user ? user.userType : "unsigned") ? (
+    children
+  ) : (
+    <Navigate to="/" replace />
+  );
 };
 
 export default Protected;

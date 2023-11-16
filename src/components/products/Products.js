@@ -1,9 +1,15 @@
 import "./Products.css";
 
+import { useAPI } from "../../services/apiContext/api.context";
+import useProducts from "../../custom/useAPIMethods/useProducts";
 import ProductItem from "../productItem/ProductItem";
 
-const Products = ({ products }) => {
-  const productsMapped = products.map((products) => (
+const Products = () => {
+  const { productsFiltered } = useAPI();
+
+  useProducts();
+
+  const productsMapped = productsFiltered.map((products) => (
     <ProductItem
       instrument={products.instrument}
       price={products.price}
@@ -12,7 +18,7 @@ const Products = ({ products }) => {
   ));
 
   return (
-    <div className="product">
+    <div className="Dashboard d-flex flex-wrap">
       {productsMapped.length > 0 ? (
         productsMapped
       ) : (

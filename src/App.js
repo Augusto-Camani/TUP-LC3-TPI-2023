@@ -14,9 +14,9 @@ import Navbar from "./components/navbar/Navbar";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
-import ProductsPage from "./components/productsPage/ProductsPage";
-import NewProduct from "./components/newProduct/NewProduct";
+import Products from "./components/products/Products";
 import ManagerProducts from "./components/managerProducts/ManagerProducts";
+import NewProduct from "./components/newProduct/NewProduct";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -26,9 +26,8 @@ import ManagerProducts from "./components/managerProducts/ManagerProducts";
 
 const App = () => {
   const { isLoading } = useAPI();
-  const user = ["user", "admin", "sysadmin"];
   const admin = ["admin", "sysadmin"];
-  const sysadmin = ["sysadmin"];
+  const user = ["user", ...admin];
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },
@@ -54,7 +53,7 @@ const App = () => {
     {
       path: "/logout",
       element: (
-        <Protected>
+        <Protected allowedRole={user}>
           <Logout />
         </Protected>
       ),
@@ -71,34 +70,34 @@ const App = () => {
     {
       path: "/products",
       element: (
-        <Protected>
+        <>
           <Navbar />
-          <ProductsPage />
-        </Protected>
-      ),
-    },
-    {
-      path: "/newproduct",
-      element: (
-        <Protected>
-          <Navbar />
-          <NewProduct />
-        </Protected>
+          <Products />
+        </>
       ),
     },
     {
       path: "/manageproducts",
       element: (
-        <Protected>
+        <Protected allowedRole={admin}>
           <Navbar />
           <ManagerProducts />
         </Protected>
       ),
     },
     {
+      path: "/newproduct",
+      element: (
+        <Protected allowedRole={admin}>
+          <Navbar />
+          <NewProduct />
+        </Protected>
+      ),
+    },
+    {
       path: "/editProduct",
       element: (
-        <Protected>
+        <Protected allowedRole={admin}>
           <Navbar />
           {/* <EditProduct /> */}
         </Protected>
@@ -108,10 +107,13 @@ const App = () => {
 
   return (
     <div className={isLoading ? "opacity-75" : undefined}>
-      {isLoading && (
-        <Spinner className="d-flex justify-content-center align-items-center" />
-      )}
       <RouterProvider router={router} />
+      {isLoading && (
+        <div
+          className="spinner"
+          children={<Spinner className="d-flex m-auto" />}
+        />
+      )}
     </div>
   );
 };

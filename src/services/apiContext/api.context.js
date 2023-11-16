@@ -1,5 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
+import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
+
 const APIContext = createContext();
 
 export const useAPI = () => {
@@ -37,9 +39,9 @@ export const APIContextProvider = ({ children }) => {
         if (response.ok) return response.json();
         else
           throw new Error(
-            "No se pudo agregar el producto. Intentelo de nuevo más tarde."
+            "No se pudo agregar el producto. Intentelo de nuevo."
           );
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => [...prevProducts, newProduct]);
         setProductsFiltered((prevProducts) => [...prevProducts, newProduct]);
@@ -55,10 +57,8 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else
-          throw new Error(
-            "No se pudo editar el producto. Intentelo de nuevo más tarde"
-          );
-      })
+          throw new Error("No se pudo editar el producto. Intentelo de nuevo");
+      }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => [...prevProducts, product]);
         setProductsFiltered((prevProducts) => [...prevProducts, product]);
@@ -79,7 +79,7 @@ export const APIContextProvider = ({ children }) => {
           throw new Error(
             "No se pudo eliminar el producto. Intentelo de nuevo más tarde"
           );
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
         setProductsFiltered((prevProducts) =>
@@ -97,12 +97,14 @@ export const APIContextProvider = ({ children }) => {
         authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json)
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error("The response had some errors");
+      }, useCatchRejectedFetch)
       .then((usersData) => {
         setUsers(usersData);
         setUsersFiltered(usersData);
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
   const postUser = async (user, token) => {
@@ -119,12 +121,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("The response had some errors");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => [...prevUsers, newUser]);
         setUsersFiltered((prevUsers) => [...prevUsers, newUser]);
-      })
-      .catch((error) => console.log(error));
+      });
     toggleLoading(false);
   };
 
@@ -140,12 +141,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("The response had some errors");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => [...prevUsers, user]);
         setUsersFiltered((prevUsers) => [...prevUsers, user]);
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
   const deleteUser = async (id, token) => {
@@ -159,12 +159,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("No se encontró el usuario");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
         setUsersFiltered((prevUsers) => prevUsers.filter((u) => u.id !== id));
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
   //Mover a sus respectivos componentes ManageSales, PurchaseHistory, Cart, EditSale, DeleteSale
@@ -176,28 +175,35 @@ export const APIContextProvider = ({ children }) => {
         authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json)
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error("The response had some errors");
+      }, useCatchRejectedFetch)
       .then((salesData) => {
         setSales(salesData);
         setSalesFiltered(salesData);
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
-  const getPurchaseHistory = async (id, token) => {
-    await fetch("http://localhost:8000/sales", {
+  const getPurchaseHistory = (id, token) => {
+    if (sales.length > 0) return;
+    toggleLoading(true);
+    fetch("http://localhost:8000/sales", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => response.json)
+      .then((response) => {
+        if (response.ok) return response.json();
+        else throw new Error("The response had some errors");
+      }, useCatchRejectedFetch)
       .then((salesData) => {
         const salesByUser = salesData.filter((s) => s.userID === id);
         setSales(salesByUser);
         setSalesFiltered(salesByUser);
-      })
-      .catch((error) => console.log(error));
+        toggleLoading(false);
+      });
   };
 
   const buyCartHandler = async (sale, token) => {
@@ -214,12 +220,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("The response had some errors");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setSales((prevSales) => [...prevSales, newSale]);
         setSalesFiltered((prevSales) => [...prevSales, newSale]);
-      })
-      .catch((error) => console.log(error));
+      });
     toggleLoading(false);
   };
 
@@ -235,12 +240,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("The response had some errors");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setSales((prevSales) => [...prevSales, sale]);
         setSalesFiltered((prevSales) => [...prevSales, sale]);
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
   const deleteSale = async (id, token) => {
@@ -254,12 +258,11 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else throw new Error("No se encontró la venta");
-      })
+      }, useCatchRejectedFetch)
       .then(() => {
         setSales((prevSales) => prevSales.filter((s) => s.id !== id));
         setSalesFiltered((prevSales) => prevSales.filter((s) => s.id !== id));
-      })
-      .catch((error) => console.log(error));
+      });
   };
 
   return (

@@ -59,9 +59,9 @@ const Register = () => {
     setUser({ ...user, [name]: value });
 
   return (
-    <div>
-      <Form className="registerForm" onSubmit={submitHandler}>
-        <Form.Group class="mb-3" controlId="formBasicEmail">
+    <div className="container w-50">
+      <Form onSubmit={submitHandler}>
+        <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -76,7 +76,7 @@ const Register = () => {
             {errors[0].text}
           </Alert>
         </Form.Group>
-        <Form.Group>
+        <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="password"
@@ -88,15 +88,18 @@ const Register = () => {
             {errors[1].text}
           </Alert>
         </Form.Group>
-        <Button type="submit">Registrarse</Button>
+        <Button className="mb-1" type="submit">
+          Registrarse
+        </Button>
       </Form>
-      <p>
-        Already have an Account?
-        <Link to="/login">Iniciar sesión</Link>
+      <p className="mb-3">
+        ¿Ya tiene una cuenta? <Link to="/login">Iniciar sesión</Link>
       </p>
-      <Alert className="Alert" show={error} variant="danger">
-        {error}
-      </Alert>
+      {error && (
+        <Alert className="Alert" variant="danger">
+          {error}
+        </Alert>
+      )}
     </div>
   );
 };
