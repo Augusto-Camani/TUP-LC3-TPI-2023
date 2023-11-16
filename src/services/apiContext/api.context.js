@@ -15,6 +15,7 @@ export const APIContextProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [sales, setSales] = useState([]);
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
   const [usersFiltered, setUsersFiltered] = useState(users);
   const [salesFiltered, setSalesFiltered] = useState(sales);
   const [productsFiltered, setProductsFiltered] = useState(products);
@@ -48,10 +49,13 @@ export const APIContextProvider = ({ children }) => {
       });
   };
 
-  const putProduct = async (product) => {
+  const putProduct = async (product, token) => {
     await fetch(`http://localhost:8000/products/${product.id}`, {
       method: "PUT",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(product),
     })
       .then((response) => {
@@ -206,7 +210,7 @@ export const APIContextProvider = ({ children }) => {
       });
   };
 
-  const buyCartHandler = async (sale, token) => {
+  const postSale = async (sale, token) => {
     const newSale = { id: users[users.length - 1].id + 1, ...sale };
     toggleLoading(true);
     await fetch("http://localhost:8000/sales", {
@@ -276,6 +280,8 @@ export const APIContextProvider = ({ children }) => {
         setSales,
         products,
         setProducts,
+        cart,
+        setCart,
         usersFiltered,
         setUsersFiltered,
         salesFiltered,
@@ -291,7 +297,7 @@ export const APIContextProvider = ({ children }) => {
         deleteUser,
         getSales,
         getPurchaseHistory,
-        buyCartHandler,
+        postSale,
         putSale,
         deleteSale,
       }}
