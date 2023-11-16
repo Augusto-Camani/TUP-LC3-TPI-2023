@@ -17,6 +17,7 @@ import Register from "./components/register/Register";
 import Products from "./components/products/Products";
 import ManagerProducts from "./components/managerProducts/ManagerProducts";
 import NewProduct from "./components/newProduct/NewProduct";
+import AccountSettings from "./components/accountSettings/accountSettings";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -100,6 +101,15 @@ const App = () => {
         <Protected allowedRole={admin}>
           <Navbar />
           {/* <EditProduct /> */}
+        </Protected>
+      ),
+    },
+    {
+      path: "/accountSettings",
+      element: (
+        <Protected allowedRole={user}>
+          <Navbar />
+          <AccountSettings />
         </Protected>
       ),
     },

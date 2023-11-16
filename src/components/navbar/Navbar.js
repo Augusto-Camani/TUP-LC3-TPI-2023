@@ -58,7 +58,11 @@ const NavBar = () => {
               </NavDropdown>
             )}
             <NavDropdown title="Cuenta" id="navbarScrollingDropdown">
-              <NavDropdown.Item disabled={!user} as={Link} to="/login">
+              <NavDropdown.Item
+                disabled={!user}
+                as={Link}
+                to="/accountSettings"
+              >
                 Cambiar contraseña
               </NavDropdown.Item>
               <NavDropdown.Divider />

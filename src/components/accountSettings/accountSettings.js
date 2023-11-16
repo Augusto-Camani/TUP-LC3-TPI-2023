@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./accountSettings.css";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const AccountSettings = () => {
@@ -13,10 +14,12 @@ const AccountSettings = () => {
   };
 
   return (
-    <div>
+    <div className="AccountSettings">
       <h2>Ajustes de cuenta</h2>
       <div>
-        <label>Nueva contraseña:</label>
+        <label>
+          <b>Nueva contraseña:</b>
+        </label>
         <input
           type="password"
           value={newPassword}
@@ -24,14 +27,18 @@ const AccountSettings = () => {
         />
       </div>
       <div>
-        <label>Nuevo email:</label>
+        <label>
+          <b>Nuevo email:</b>
+        </label>
         <input
           type="text"
           value={newEmail}
           onChange={(e) => setNewEmail(e.target.value)}
         />
       </div>
-      <button onClick={ChangeSettingsHandler}>Guardar ajustes</button>
+      <button onClick={ChangeSettingsHandler}>
+        <b>Guardar ajustes</b>
+      </button>
     </div>
   );
 };
