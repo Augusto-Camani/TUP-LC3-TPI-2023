@@ -9,11 +9,12 @@ const Products = () => {
 
   useProducts();
 
-  const productsMapped = productsFiltered.map((products) => (
+  const productsMapped = productsFiltered.map((product) => (
     <ProductItem
-      instrument={products.instrument}
-      price={products.price}
-      stock={products.stock}
+      id={product.id}
+      instrument={product.instrument}
+      price={product.price}
+      stock={product.stock}
     />
   ));
 

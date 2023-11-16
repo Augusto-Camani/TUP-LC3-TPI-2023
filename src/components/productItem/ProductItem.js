@@ -1,15 +1,18 @@
-import { useState } from "react";
-
 import "./ProductItem.css";
+import { useAPI } from "../../services/apiContext/api.context";
 
-const ProductItem = ({ instrument, price, stock }) => {
-  const [instrumentValue, setInstrumentValue] = useState(instrument);
+const ProductItem = ({ product }) => {
+  const { setCart } = useAPI();
+  const addToCartHandler = () => {
+    setCart((prev) => [...prev, product]);
+  };
 
   return (
     <div className="product-item-container">
-      <h1>{instrumentValue}</h1>
-      <h2>Precio: {price}</h2>
-      <h3>Disponibilidad: {stock}</h3>
+      <h1>{product.instrument}</h1>
+      <h2>Precio: {product.price}</h2>
+      <h3>Disponibilidad: {product.stock}</h3>
+      <button onClick={addToCartHandler}>Agregar al carrito</button>
     </div>
   );
 };
