@@ -10,12 +10,7 @@ const Products = () => {
   useProducts();
 
   const productsMapped = productsFiltered.map((product) => (
-    <ProductItem
-      id={product.id}
-      instrument={product.instrument}
-      price={product.price}
-      stock={product.stock}
-    />
+    <ProductItem product={product} />
   ));
 
   return (
