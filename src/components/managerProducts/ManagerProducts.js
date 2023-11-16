@@ -2,58 +2,57 @@ import React from "react";
 import { useAPI } from "../../services/apiContext/api.context";
 import { useEffect, useState } from "react";
 import useProducts from "../../custom/useAPIMethods/useProducts";
-import Products from "../products/Products";
 
-import { Await } from "react-router";
 import "./ManagerProducts.css";
-import { Button } from "bootstrap";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const ManagerProducts = () => {
   const { user } = useAuth();
-
-  const instrumentObject = { instrument: "", price: 0, stock: 0 };
+  const newInstrumentObject = { instrument: "", price: 0, stock: 0 };
+  const [newInstrument, setNewInstrument] = useState(newInstrumentObject);
+  const instrumentObject = { id: 0, instrument: "", price: 0, stock: 0 };
   const [instrument, setInstrument] = useState(instrumentObject);
   const [formValid, setFormValid] = useState(false);
+  const [editId, setEditId] = useState(0);
+  const [error, setError] = useState("");
 
-  const [editId, setEditId] = useState(-1);
-  const {
-    toggleLoading,
-    deleteProduct,
-    putProduct,
-    postProduct,
-    setProducts,
-    productsFiltered,
-  } = useAPI();
+  const { postProduct, putProduct, deleteProduct, productsFiltered } = useAPI();
 
   useProducts();
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        instrument.name !== "" &&
-        instrument.price !== 0 &&
-        instrument.stock !== 0;
+        newInstrument.name !== "" &&
+        newInstrument.price !== 0 &&
+        newInstrument.stock !== 0;
       setFormValid(isValid);
     }, 300);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [instrument]);
+  }, [newInstrument]);
 
-  const changeHandler = ({ target: { value, type, name } }) =>
-    setInstrument((prevInstrument) => ({
+  const changeHandler = ({ target: { value, type, name } }) => {
+    setNewInstrument((prevInstrument) => ({
       ...prevInstrument,
       [name]: type === "number" ? parseInt(value) : value,
     }));
+  };
 
   const addProductHandler = () => {
-    postProduct(instrument, user.accessToken);
-    setInstrument(instrumentObject);
+    try {
+      postProduct(newInstrument, user.accessToken);
+    } catch (error) {
+      setError(error.message);
+    }
+    setNewInstrument(newInstrumentObject);
   };
+
   const editProductHandler = (product) => {
     putProduct(product);
   };
+
   const deleteProductHandler = (product) => {
     deleteProduct(product.id);
   };
@@ -67,7 +66,7 @@ const ManagerProducts = () => {
             name="instrument"
             placeholder="nombre del instrumento "
             value={instrument.instrument}
-            onChange={changeHandler}
+            onChange={"changeHandler"}
           />
         </td>
         <td>
@@ -77,7 +76,8 @@ const ManagerProducts = () => {
             min="1"
             step="1"
             placeholder="10 "
-            onChange={changeHandler}
+            value={instrument.price}
+            onChange={"changeHandler"}
           />
         </td>
         <td>
@@ -88,7 +88,7 @@ const ManagerProducts = () => {
             step="1"
             placeholder="stock del instrumento "
             value={instrument.stock}
-            onChange={changeHandler}
+            onChange={"changeHandler"}
           />
         </td>
         <td>
@@ -104,24 +104,27 @@ const ManagerProducts = () => {
         <form>
           <input
             type="text"
+            name="instrument"
             placeholder="nombre del instrumento "
-            value={instrument.instrument}
+            value={newInstrument.instrument}
             onChange={changeHandler}
           />
           <input
             type="number"
+            name="price"
             min="1"
             step="1"
             placeholder="10 "
-            value={instrument.price}
+            value={newInstrument.price}
             onChange={changeHandler}
           />
           <input
             type="number"
+            name="stock"
             min="1"
             step="1"
             placeholder="stock del instrumento "
-            value={instrument.stock}
+            value={newInstrument.stock}
             onChange={changeHandler}
           />
           <button disabled={!formValid} onClick={addProductHandler}>
@@ -155,7 +158,7 @@ const ManagerProducts = () => {
                 <br />
                 <td>{instrument.stock}</td>
                 <td>
-                  <button onClick={() => handlerEdit(instrument.id)}>
+                  <button onClick={() => editProductHandler(instrument)}>
                     edit
                   </button>
                   <button>delete</button>
@@ -165,6 +168,7 @@ const ManagerProducts = () => {
           )}
         </tbody>
       </table>
+      {error && <p>{error}</p>}
     </div>
   );
 };
