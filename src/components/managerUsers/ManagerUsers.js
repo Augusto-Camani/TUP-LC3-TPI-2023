@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { useAPI } from "../../services/apiContext/api.context";
 import Table from "react-bootstrap/Table";
-import EditProduct from "../editProduct/EditProduct";
+
 import { useAuth } from "../../services/authenticationContext/authentication.context";
+import EditUser from "../editUser/EditUser";
 
 const ManagerProducts = () => {
   const { deleteProduct } = useAPI();
   const { accessToken } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { getUsers, usersFiltered, users } = useAPI();
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
     if (users.length > 0) return;
     getUsers(accessToken);
   }, []);
 
-  const editHandler = () => {
+  const editHandler = (user = {}) => {
+    setCurrentUser(user);
     setIsEditing((prev) => !prev);
   };
   const deleteProductHandler = (id) => {
     deleteProduct(id, accessToken);
   };
+
   return (
     <>
       {!isEditing ? (
@@ -28,21 +32,23 @@ const ManagerProducts = () => {
           <thead>
             <tr>
               <th>id</th>
-              <th>nombre</th>
               <th>mail</th>
+              <th>contraseña</th>
+              <th>tipo de usuario</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((users, index) => (
+            {users.map((user, index) => (
               <tr key={index}>
-                <td>{users.id}</td>
-                <td>{users.name}</td>
-                <td>{users.mail}</td>
+                <td>{user.id}</td>
+                <td>{user.email}</td>
+                <td>{user.password}</td>
+                <td>{user.userType}</td>
                 <td>
-                  <button onClick={editHandler}>Editar</button>
+                  <button onClick={() => editHandler(user)}>Editar</button>
                   <button
                     onClick={() => {
-                      deleteProductHandler(users.id);
+                      deleteProductHandler(user.id);
                     }}
                   >
                     Borrar{" "}
@@ -53,7 +59,11 @@ const ManagerProducts = () => {
           </tbody>
         </Table>
       ) : (
-        <EditProduct token={accessToken} handleEdit={editHandler} />
+        <EditUser
+          token={accessToken}
+          handleEdit={editHandler}
+          user={currentUser}
+        />
       )}
     </>
   );
