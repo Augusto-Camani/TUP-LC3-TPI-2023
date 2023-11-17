@@ -4,7 +4,7 @@ import { useAuth } from "../../services/authenticationContext/authentication.con
 import { useAPI } from "../../services/apiContext/api.context";
 
 const AccountSettings = () => {
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
   const { putUser } = useAPI();
   const [newUser, setNewUser] = useState({ email: "", password: "" });
 
@@ -19,7 +19,7 @@ const AccountSettings = () => {
         ...newUser,
         createdAt: user.createdAt,
       },
-      user.accessToken
+      accessToken
     );
     setNewUser({ email: "", password: "" });
   };
