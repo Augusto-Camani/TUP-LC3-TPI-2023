@@ -6,7 +6,7 @@ import { useAPI } from "../../services/apiContext/api.context";
 import CartItem from "../cartItem/CartItem";
 
 const Cart = () => {
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
   const { products, cart, setCart, putProduct, postSale } = useAPI();
   const navigate = useNavigate();
   const [sale, setSale] = useState({ userID: user.id, content: cart });
@@ -19,13 +19,16 @@ const Cart = () => {
 
   const buyHandler = () => {
     try {
-      postSale(sale, user.accessToken);
+      postSale(sale, accessToken);
       cart.forEach((product) => {
         const editedProduct = products.find((p) => p.id === product.id);
-        putProduct({
-          ...editedProduct,
-          stock: product.stock - editedProduct.quantity,
-        });
+        putProduct(
+          {
+            ...editedProduct,
+            stock: product.stock - editedProduct.quantity,
+          },
+          accessToken
+        );
       });
     } catch (error) {
       setError(error.message);
