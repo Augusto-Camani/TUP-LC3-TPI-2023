@@ -27,19 +27,19 @@ const NavBar = () => {
             ) && (
               <NavDropdown title="Administrar" id="navbarScrollingDropdown">
                 {user.userType === "admin" ? (
-                  <NavDropdown.Item as={Link} to="/manageproducts">
+                  <NavDropdown.Item as={Link} to="/products">
                     Productos
                   </NavDropdown.Item>
                 ) : (
                   user.userType === "sysadmin" && (
                     <>
-                      <NavDropdown.Item as={Link} to="/manageproducts">
+                      <NavDropdown.Item as={Link} to="/manageProducts">
                         Productos
                       </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/managerusers">
+                      <NavDropdown.Item as={Link} to="/manageUsers">
                         Usuarios
                       </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/managesales">
+                      <NavDropdown.Item as={Link} to="/manageSales">
                         Ventas
                       </NavDropdown.Item>
                     </>

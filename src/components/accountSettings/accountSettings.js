@@ -12,7 +12,7 @@ const AccountSettings = () => {
   ];
   const { user, accessToken } = useAuth();
   const { putUser, getPurchaseHistory, sales } = useAPI();
-  const [newUser, setNewUser] = useState({ email: "", password: "" });
+  const [newUser, setNewUser] = useState({ ...user });
   const [clicked, setClicked] = useState(false);
 
   const showPurchasesHandler = () => {
@@ -20,15 +20,12 @@ const AccountSettings = () => {
     setClicked(true);
   };
 
-  const putUserHandler = async (editedUser, token) => {
-    await putUser(editedUser, token)
-      .then(alert("Ajustes guardados exitosamente"))
-      .catch((error) => alert(error.message));
-  };
-
-  const ChangeSettingsHandler = () => {
+  const ChangeSettingsHandler = async () => {
     try {
-      if (newUser.email.length > 0 && newUser.password.length > 0)
+      if (
+        (newUser.email === user.email && newUser.password === user.password) ||
+        (!newUser.email.length > 0 && !newUser.password.length > 0)
+      )
         throw new Error(errors[0]);
       if (newUser.email.length > 0) {
         if (!/\S+@\S+\.\S+/.test(newUser.email)) throw new Error(errors[1]);
@@ -42,19 +39,19 @@ const AccountSettings = () => {
           throw new Error(errors[2]);
         }
       }
-      putUserHandler(
+      await putUser(
         {
-          id: user.id,
+          id: newUser.id,
           email: newUser.email.length > 0 ? newUser.email : user.email,
           password:
             newUser.password.length > 0 ? newUser.password : user.password,
-          userType: user.userType,
-          ...newUser,
-          createdAt: user.createdAt,
+          userType: newUser.userType,
+          createdAt: newUser.createdAt,
         },
         accessToken
       );
-      setNewUser({ email: "", password: "" });
+      setNewUser({ ...user });
+      alert("Ajustes guardados correctamente");
     } catch (error) {
       alert(error.message);
     }

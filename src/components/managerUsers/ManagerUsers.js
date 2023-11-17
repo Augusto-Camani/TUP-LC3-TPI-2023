@@ -17,7 +17,7 @@ const ManagerProducts = () => {
   useEffect((token) => {
     if (users.length > 0) return;
     toggleLoading(true);
-    fetch("http://localhost:8000/users", {
+    fetch("https://tuxguitarsapi.onrender.com/users", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,

@@ -1,29 +1,57 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+import Cookies from "js-cookie";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
+import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
 const Login = () => {
-  const { loginHandler } = useAuth();
-  const [user, setUser] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
+  const { setUser, setAccessToken } = useAuth();
+  const [userToLogin, setUserToLogin] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+
+  const loginHandler = async (email, password) => {
+    await fetch("https://tuxguitarsapi.onrender.com/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else
+          throw new Error(
+            "No se encontró un usuario con las credenciales proporcionadas"
+          );
+      }, useCatchRejectedFetch)
+      .then((response) => {
+        Cookies.set("accessToken", response.accessToken);
+        Cookies.set("refreshToken", response.refreshToken);
+        setAccessToken(response.accessToken);
+        const currentUser = {
+          id: response.id,
+          email: response.email,
+          userType: response.userType,
+          createdAt: response.createdAt,
+        };
+        setUser(currentUser);
+        localStorage.setItem("user", JSON.stringify(currentUser));
+      });
+  };
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    setError("");
 
     try {
-      await loginHandler(user.email, user.password);
+      await loginHandler(userToLogin.email, userToLogin.password);
       navigate("/");
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
   const changeHandler = ({ target: { value, name } }) =>
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    setUserToLogin((prevUser) => ({ ...prevUser, [name]: value }));
 
   return (
     <div className="container w-50">
@@ -33,7 +61,7 @@ const Login = () => {
           <Form.Control
             type="email"
             name="email"
-            value={user.email}
+            value={userToLogin.email}
             onChange={changeHandler}
             placeholder="Email"
           />
@@ -44,7 +72,7 @@ const Login = () => {
           <Form.Control
             type="password"
             name="password"
-            value={user.password}
+            value={userToLogin.password}
             onChange={changeHandler}
             placeholder="Contraseña"
           />
@@ -56,11 +84,6 @@ const Login = () => {
       <p className="mb-3">
         ¿No tiene una cuenta? <Link to="/register">Registrarse</Link>
       </p>
-      {error && (
-        <Alert className="Alert" variant="danger">
-          {error}
-        </Alert>
-      )}
     </div>
   );
 };

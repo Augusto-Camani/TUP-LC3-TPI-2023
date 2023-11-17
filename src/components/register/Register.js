@@ -1,21 +1,36 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 
-import { useAuth } from "../../services/authenticationContext/authentication.context";
+import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
 const Register = () => {
   const errors = [
     "Ingrese un E-Mail",
     "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número",
   ];
-  const { registerHandler } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const registerHandler = async (email, password) => {
+    await fetch("https://tuxguitarsapi.onrender.com/register", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        userType: "user",
+      }),
+    }).then((response) => {
+      if (response.ok) return response.json();
+      else {
+        throw new Error("No se pudo registrar su usuario. Intentelo de nuevo");
+      }
+    }, useCatchRejectedFetch);
+  };
 
   const changeHandler = ({ target: { value, name } }) =>
     setUser({ ...user, [name]: value });
@@ -34,7 +49,7 @@ const Register = () => {
       await registerHandler(user.email, user.password);
       navigate("/login");
     } catch (error) {
-      setError(error.message);
+      alert(error.message);
     }
   };
 
@@ -52,9 +67,6 @@ const Register = () => {
           <Form.Text className="text-muted">
             Nunca compartiremos su dirección de correo electrónico.
           </Form.Text>
-          <Alert variant="danger" show={errors[0].isError}>
-            {errors[0].text}
-          </Alert>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
@@ -64,9 +76,6 @@ const Register = () => {
             onChange={changeHandler}
             placeholder="contraseña"
           />
-          <Alert className="Alert" show={errors[1].isError} variant="danger">
-            {errors[1].text}
-          </Alert>
         </Form.Group>
         <Button className="mb-1" type="submit">
           Registrarse
@@ -75,11 +84,6 @@ const Register = () => {
       <p className="mb-3">
         ¿Ya tiene una cuenta? <Link to="/login">Iniciar sesión</Link>
       </p>
-      {error && (
-        <Alert className="Alert" variant="danger">
-          {error}
-        </Alert>
-      )}
     </div>
   );
 };

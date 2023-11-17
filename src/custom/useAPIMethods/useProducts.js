@@ -9,7 +9,7 @@ const useProducts = () => {
   useEffect(() => {
     if (products.length > 0) return;
     toggleLoading(true);
-    fetch("http://localhost:8000/products", {
+    fetch("https://tuxguitarsapi.onrender.com/products", {
       headers: { "content-type": "application/json" },
     })
       .then((response) => {
