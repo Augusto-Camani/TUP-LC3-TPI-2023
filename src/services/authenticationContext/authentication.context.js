@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import Cookies from "js-cookie";
 
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
@@ -14,6 +15,7 @@ export const useAuth = () => {
 
 export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(userValue);
+  const [accessToken, setAccessToken] = useState(null);
 
   const loginHandler = async (email, password) => {
     await fetch("http://localhost:8000/login", {
@@ -29,13 +31,14 @@ export const AuthenticationContextProvider = ({ children }) => {
           );
       }, useCatchRejectedFetch)
       .then((response) => {
+        Cookies.set("accessToken", response.accessToken);
+        Cookies.set("refreshToken", response.refreshToken);
+        setAccessToken(response.accessToken);
         const currentUser = {
           id: response.id,
           email: response.email,
           userType: response.userType,
           createdAt: response.createdAt,
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
         };
         setUser(currentUser);
         localStorage.setItem("user", JSON.stringify(currentUser));
@@ -43,6 +46,9 @@ export const AuthenticationContextProvider = ({ children }) => {
   };
 
   const logoutHandler = () => {
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    setAccessToken(null);
     setUser(null);
     localStorage.removeItem("user");
   };

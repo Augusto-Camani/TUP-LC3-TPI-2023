@@ -1,17 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAPI } from "../../services/apiContext/api.context";
-import { useEffect, useState } from "react";
 import useProducts from "../../custom/useAPIMethods/useProducts";
-
-import "./ManagerProducts.css";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const ManagerProducts = () => {
   const { user } = useAuth();
   const newInstrumentObject = { instrument: "", price: 0, stock: 0 };
   const [newInstrument, setNewInstrument] = useState(newInstrumentObject);
-  const instrumentObject = { id: 0, instrument: "", price: 0, stock: 0 };
-  const [instrument, setInstrument] = useState(instrumentObject);
   const [formValid, setFormValid] = useState(false);
   const [error, setError] = useState("");
   const [editedProduct, setEditedProduct] = useState(null);
@@ -23,7 +18,7 @@ const ManagerProducts = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        newInstrument.name !== "" &&
+        newInstrument.instrument !== "" &&
         newInstrument.price !== 0 &&
         newInstrument.stock !== 0;
       setFormValid(isValid);
@@ -52,73 +47,80 @@ const ManagerProducts = () => {
 
   const editProductHandler = (product) => {
     setEditedProduct(product);
+    setEditID(product.id);
   };
 
   const cancelEditHandler = () => {
     setEditedProduct(null);
+    setEditID(0);
   };
 
-  const deleteProductHandler = (product) => {
-    deleteProduct(product.id);
-  };
-  const updateProductHandler = async () => {
+  const updateProductHandler = async (updatedProduct) => {
     try {
-      await putProduct(editedProduct, user.accessToken);
+      await putProduct(updatedProduct, user.accessToken);
       // Aquí puedes realizar acciones adicionales después de la actualización
       setEditedProduct(null); // Restablecer editedProduct después de la actualización
+      setEditID(0);
     } catch (error) {
       setError(error.message);
     }
   };
 
   function Edit({ product, updateProductHandler, cancelEditHandler }) {
-    function inputHandler(e) {
-      setInstrument((prevInstrument) => ({
+    const [editedInstrument, setEditedInstrument] = useState({
+      instrument: product.instrument,
+      price: product.price,
+      stock: product.stock,
+    });
+
+    const inputHandler = (e) => {
+      setEditedInstrument((prevInstrument) => ({
         ...prevInstrument,
         [e.target.name]: e.target.value,
       }));
-    }
+    };
+
     return (
       <tr>
-        <form>
-          <td>
-            <input
-              type="text"
-              name="instrument"
-              value={instrument.instrument}
-              onChange={inputHandler}
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              name="price"
-              min="1"
-              step="1"
-              value={instrument.price}
-              onChange={inputHandler}
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              name="stock"
-              min="1"
-              step="1"
-              value={instrument.stock}
-              onChange={inputHandler}
-            />
-          </td>
-
-          <td>
-            <button type="submit" onClick={updateProductHandler}>
-              update
-            </button>
-            <button type="button" onClick={cancelEditHandler}>
-              cancel
-            </button>
-          </td>
-        </form>
+        <td>
+          <input
+            type="text"
+            name="instrument"
+            value={editedInstrument.instrument}
+            onChange={inputHandler}
+          />
+        </td>
+        <td>
+          <input
+            type="number"
+            name="price"
+            min="1"
+            step="1"
+            value={editedInstrument.price}
+            onChange={inputHandler}
+          />
+        </td>
+        <td>
+          <input
+            type="number"
+            name="stock"
+            min="1"
+            step="1"
+            value={editedInstrument.stock}
+            onChange={inputHandler}
+          />
+        </td>
+        <td>
+          <button
+            type="button"
+            onClick={() => updateProductHandler(editedInstrument)}
+          >
+            update
+          </button>
+          <button type="button" onClick={cancelEditHandler}>
+            cancel
+          </button>
+        </td>
       </tr>
     );
   }
@@ -152,7 +154,11 @@ const ManagerProducts = () => {
             value={newInstrument.stock}
             onChange={changeHandler}
           />
-          <button disabled={!formValid} onClick={addProductHandler}>
+          <button
+            disabled={!formValid}
+            type="button"
+            onClick={addProductHandler}
+          >
             add
           </button>
         </form>
@@ -169,28 +175,32 @@ const ManagerProducts = () => {
             <th>stock</th>
           </tr>
         </thead>
-        <tbody style={{}}>
-          {productsFiltered.map((instrument, index) =>
-            instrument.id === editID ? (
+        <tbody>
+          {productsFiltered.map((product, index) =>
+            product.id === editID ? (
               <Edit
+                key={index}
                 product={editedProduct}
                 updateProductHandler={updateProductHandler}
                 cancelEditHandler={cancelEditHandler}
               />
             ) : (
               <tr key={index}>
-                <td>{instrument.id}</td>
+                <td>{product.id}</td>
                 <br />
-                <td>{instrument.instrument}</td>
+                <td>{product.instrument}</td>
                 <br />
-                <td>{instrument.price}</td>
+                <td>{product.price}</td>
                 <br />
-                <td>{instrument.stock}</td>
+                <td>{product.stock}</td>
                 <td>
-                  <button onClick={() => editProductHandler(instrument.id)}>
+                  <button
+                    type="button"
+                    onClick={() => editProductHandler(product)}
+                  >
                     edit
                   </button>
-                  <button>delete</button>
+                  <button type="button">delete</button>
                 </td>
               </tr>
             )
