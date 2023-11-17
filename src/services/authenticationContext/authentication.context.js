@@ -33,6 +33,7 @@ export const AuthenticationContextProvider = ({ children }) => {
           id: response.id,
           email: response.email,
           userType: response.userType,
+          createdAt: response.createdAt,
           accessToken: response.accessToken,
           refreshToken: response.refreshToken,
         };
@@ -55,29 +56,12 @@ export const AuthenticationContextProvider = ({ children }) => {
         password: password,
         userType: "user",
       }),
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else {
-          throw new Error(
-            "No se pudo registrar su usuario. Intentelo de nuevo"
-          );
-        }
-      }, useCatchRejectedFetch)
-      .then((response) => {
-        const currentUser = {
-          id: response.id,
-          email: response.email,
-          userType: response.userType,
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        };
-        setUser(currentUser);
-        localStorage.setItem("user", JSON.stringify(currentUser));
-      })
-      .catch(() => {
-        throw new Error("Error de servidor. Intentelo de nuevo más tarde");
-      });
+    }).then((response) => {
+      if (response.ok) return response.json();
+      else {
+        throw new Error("No se pudo registrar su usuario. Intentelo de nuevo");
+      }
+    }, useCatchRejectedFetch);
   };
 
   return (

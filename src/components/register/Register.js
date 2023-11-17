@@ -5,58 +5,38 @@ import { Alert, Button, Form } from "react-bootstrap";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const Register = () => {
+  const errors = [
+    "Ingrese un E-Mail",
+    "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número",
+  ];
   const { registerHandler } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
 
-  const [error, setError] = useState("");
-  const [errors, setErrors] = useState([
-    { text: "Ingrese un E-Mail", isError: false },
-    {
-      text: "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número",
-      isError: false,
-    },
-  ]);
-  const navigate = useNavigate();
+  const changeHandler = ({ target: { value, name } }) =>
+    setUser({ ...user, [name]: value });
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    const newErrors = [...errors];
 
-    setError("");
-    if (!/\S+@\S+\.\S+/.test(user.email)) {
-      newErrors[0].isError = true;
-      setErrors(newErrors);
-    } else {
-      newErrors[0].isError = false;
-      setErrors(newErrors);
-    }
-    if (
-      user.password.length < 6 ||
-      !/\p{Lu}/u.test(user.password) ||
-      !/\d/.test(user.password)
-    ) {
-      newErrors[1].isError = true;
-      setErrors(newErrors);
-    } else {
-      newErrors[1].isError = false;
-      setErrors(newErrors);
-    }
-    if (errors[0].isError || errors[1].isError) {
-      return;
-    }
     try {
+      if (!/\S+@\S+\.\S+/.test(user.email)) throw new Error(errors[0]);
+      if (
+        user.password.length < 6 ||
+        !/\p{Lu}/u.test(user.password) ||
+        !/\d/.test(user.password)
+      )
+        throw new Error(errors[1]);
       await registerHandler(user.email, user.password);
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       setError(error.message);
     }
   };
-
-  const changeHandler = ({ target: { value, name } }) =>
-    setUser({ ...user, [name]: value });
 
   return (
     <div className="container w-50">

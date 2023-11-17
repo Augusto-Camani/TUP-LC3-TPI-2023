@@ -17,6 +17,7 @@ const AccountSettings = () => {
           newUser.password.length > 0 ? newUser.password : user.password,
         userType: user.userType,
         ...newUser,
+        createdAt: user.createdAt,
       },
       user.accessToken
     );
