@@ -53,7 +53,7 @@ const NavBar = () => {
                 as={Link}
                 to="/accountSettings"
               >
-                Cambiar contraseña
+                Ajustes
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item as={Link} to={user ? "/logout" : "/login"}>

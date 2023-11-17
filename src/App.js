@@ -90,7 +90,7 @@ const App = () => {
       ),
     },
     {
-      path: "/manageproducts",
+      path: "/manageProducts",
       element: (
         <Protected allowedRole={admin}>
           <Navbar />
@@ -99,11 +99,20 @@ const App = () => {
       ),
     },
     {
-      path: "/managerusers",
+      path: "/manageUsers",
       element: (
         <Protected allowedRole={admin}>
           <Navbar />
           <ManagerUsers />
+        </Protected>
+      ),
+    },
+    {
+      path: "/manageSales",
+      element: (
+        <Protected allowedRole={admin}>
+          <Navbar />
+          {/* <ManagerSales /> */}
         </Protected>
       ),
     },
