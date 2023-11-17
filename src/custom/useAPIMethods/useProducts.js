@@ -4,8 +4,7 @@ import useCatchRejectedFetch from "../useCatchRejectedFetch/useCatchRejectedFetc
 import { useAPI } from "../../services/apiContext/api.context";
 
 const useProducts = () => {
-  const { toggleLoading, products, setProducts, setProductsFiltered } =
-    useAPI();
+  const { toggleLoading, products, setProducts } = useAPI();
 
   useEffect(() => {
     if (products.length > 0) return;
@@ -22,7 +21,6 @@ const useProducts = () => {
       }, useCatchRejectedFetch)
       .then((productsData) => {
         setProducts(productsData);
-        setProductsFiltered(productsData);
         toggleLoading(false);
       });
   }, []);

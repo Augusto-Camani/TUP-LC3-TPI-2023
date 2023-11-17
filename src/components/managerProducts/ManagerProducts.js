@@ -6,7 +6,7 @@ import EditProduct from "../editProduct/EditProduct";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const ManagerProducts = () => {
-  const { productsFiltered, deleteProduct } = useAPI();
+  const { products, deleteProduct } = useAPI();
   const { accessToken } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -30,17 +30,17 @@ const ManagerProducts = () => {
             </tr>
           </thead>
           <tbody>
-            {productsFiltered.map((instrument, index) => (
+            {products.map((product, index) => (
               <tr key={index}>
-                <td>{instrument.id}</td>
-                <td>{instrument.instrument}</td>
-                <td>{instrument.price}</td>
-                <td>{instrument.stock}</td>
+                <td>{product.id}</td>
+                <td>{product.instrument}</td>
+                <td>{product.price}</td>
+                <td>{product.stock}</td>
                 <td>
                   <button onClick={editHandler}>Editar</button>
                   <button
                     onClick={() => {
-                      deleteProductHandler(instrument.id);
+                      deleteProductHandler(product.id);
                     }}
                   >
                     Borrar{" "}

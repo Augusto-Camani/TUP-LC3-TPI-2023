@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAPI } from "../../services/apiContext/api.context";
 import Table from "react-bootstrap/Table";
 import EditProduct from "../editProduct/EditProduct";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const ManagerProducts = () => {
-  const { productsFiltered, deleteProduct } = useAPI();
+  const { deleteProduct } = useAPI();
   const { accessToken } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { getUsers, usersFiltered, users } = useAPI();
+
+  useEffect(() => {
+    if (users.length > 0) return;
+    getUsers(accessToken);
+  }, []);
 
   const editHandler = () => {
     setIsEditing((prev) => !prev);
@@ -28,7 +33,7 @@ const ManagerProducts = () => {
             </tr>
           </thead>
           <tbody>
-            {usersFiltered.map((users, index) => (
+            {users.map((users, index) => (
               <tr key={index}>
                 <td>{users.id}</td>
                 <td>{users.name}</td>
