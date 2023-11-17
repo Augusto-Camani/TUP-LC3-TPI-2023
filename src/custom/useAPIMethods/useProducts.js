@@ -15,7 +15,10 @@ const useProducts = () => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("Hubo un problema al llamar a la api");
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
       }, useCatchRejectedFetch)
       .then((productsData) => {
         setProducts(productsData);

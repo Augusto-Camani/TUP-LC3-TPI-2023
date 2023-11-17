@@ -16,9 +16,6 @@ export const APIContextProvider = ({ children }) => {
   const [sales, setSales] = useState([]);
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
-  const [usersFiltered, setUsersFiltered] = useState(users);
-  const [salesFiltered, setSalesFiltered] = useState(sales);
-  const [productsFiltered, setProductsFiltered] = useState(products);
 
   const toggleLoading = (value) => {
     setIsLoading(value);
@@ -39,13 +36,10 @@ export const APIContextProvider = ({ children }) => {
       .then((response) => {
         if (response.ok) return response.json();
         else
-          throw new Error(
-            "No se pudo agregar el producto. Intentelo de nuevo."
-          );
+          throw new Error("No se pudo agregar el producto. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => [...prevProducts, newProduct]);
-        setProductsFiltered((prevProducts) => [...prevProducts, newProduct]);
       });
   };
 
@@ -64,8 +58,9 @@ export const APIContextProvider = ({ children }) => {
           throw new Error("No se pudo editar el producto. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
-        setProducts((prevProducts) => [...prevProducts, product]);
-        setProductsFiltered((prevProducts) => [...prevProducts, product]);
+        setProducts((prevProducts) =>
+          prevProducts.map((p) => (p.id === product.id ? product : p))
+        );
       });
   };
 
@@ -81,14 +76,11 @@ export const APIContextProvider = ({ children }) => {
         if (response.ok) return response.json();
         else
           throw new Error(
-            "No se pudo eliminar el producto. Intentelo de nuevo más tarde"
+            "No se pudo eliminar el producto. Intentelo de nuevo"
           );
       }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
-        setProductsFiltered((prevProducts) =>
-          prevProducts.filter((p) => p.id !== id)
-        );
       });
   };
 
@@ -103,17 +95,18 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
       }, useCatchRejectedFetch)
       .then((usersData) => {
         setUsers(usersData);
-        setUsersFiltered(usersData);
       });
   };
 
   const postUser = async (user, token) => {
     const newUser = { id: users[users.length - 1].id + 1, ...user };
-    toggleLoading(true);
     await fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
@@ -124,13 +117,12 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error("No se pudo agregar el usuario. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => [...prevUsers, newUser]);
-        setUsersFiltered((prevUsers) => [...prevUsers, newUser]);
       });
-    toggleLoading(false);
   };
 
   const putUser = async (user, token) => {
@@ -144,11 +136,13 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error("No se pudo editar el producto. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
-        setUsers((prevUsers) => [...prevUsers, user]);
-        setUsersFiltered((prevUsers) => [...prevUsers, user]);
+        setUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? user : u))
+        );
       });
   };
 
@@ -162,11 +156,11 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("No se encontró el usuario");
+        else
+          throw new Error("No se pudo eliminar el usuario. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
-        setUsersFiltered((prevUsers) => prevUsers.filter((u) => u.id !== id));
       });
   };
 
@@ -181,17 +175,18 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
       }, useCatchRejectedFetch)
       .then((salesData) => {
         setSales(salesData);
-        setSalesFiltered(salesData);
       });
   };
 
   const getPurchaseHistory = (id, token) => {
     if (sales.length > 0) return;
-    toggleLoading(true);
     fetch("http://localhost:8000/sales", {
       headers: {
         "content-type": "application/json",
@@ -200,19 +195,18 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
       }, useCatchRejectedFetch)
       .then((salesData) => {
-        const salesByUser = salesData.filter((s) => s.userID === id);
-        setSales(salesByUser);
-        setSalesFiltered(salesByUser);
-        toggleLoading(false);
+        setSales(salesData.filter((s) => s.userID === id));
       });
   };
 
   const postSale = async (sale, token) => {
     const newSale = { id: users[users.length - 1].id + 1, ...sale };
-    toggleLoading(true);
     await fetch("http://localhost:8000/sales", {
       method: "POST",
       headers: {
@@ -223,13 +217,14 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else
+          throw new Error(
+            "No se pudo hacer la compra/venta. Intentelo de nuevo"
+          );
       }, useCatchRejectedFetch)
       .then(() => {
         setSales((prevSales) => [...prevSales, newSale]);
-        setSalesFiltered((prevSales) => [...prevSales, newSale]);
       });
-    toggleLoading(false);
   };
 
   const putSale = async (sale, token) => {
@@ -243,11 +238,12 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("The response had some errors");
+        else throw new Error("No se pudo editar la venta. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
-        setSales((prevSales) => [...prevSales, sale]);
-        setSalesFiltered((prevSales) => [...prevSales, sale]);
+        setSales((prevSales) =>
+          prevSales.map((s) => (s.id === sale.id ? sale : s))
+        );
       });
   };
 
@@ -261,11 +257,11 @@ export const APIContextProvider = ({ children }) => {
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("No se encontró la venta");
+        else
+          throw new Error("No se pudo eliminar la venta. Intentelo de nuevo");
       }, useCatchRejectedFetch)
       .then(() => {
         setSales((prevSales) => prevSales.filter((s) => s.id !== id));
-        setSalesFiltered((prevSales) => prevSales.filter((s) => s.id !== id));
       });
   };
 
@@ -282,12 +278,6 @@ export const APIContextProvider = ({ children }) => {
         setProducts,
         cart,
         setCart,
-        usersFiltered,
-        setUsersFiltered,
-        salesFiltered,
-        setSalesFiltered,
-        productsFiltered,
-        setProductsFiltered,
         postProduct,
         putProduct,
         deleteProduct,
