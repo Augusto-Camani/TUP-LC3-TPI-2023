@@ -73,6 +73,7 @@ const AccountSettings = () => {
                 <th>id de Venta</th>
                 <th>instrumento</th>
                 <th>precio</th>
+                <th>cantidad</th>
               </tr>
             </thead>
             <tbody>
@@ -82,6 +83,7 @@ const AccountSettings = () => {
                     <td>{sale.id}</td>
                     <td>{item.instrument}</td>
                     <td>{item.price}</td>
+                    <td>{item.quantity}</td>
                   </tr>
                 ))
               )}
