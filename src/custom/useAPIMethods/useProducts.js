@@ -21,8 +21,9 @@ const useProducts = () => {
       }, useCatchRejectedFetch)
       .then((productsData) => {
         setProducts(productsData);
-        toggleLoading(false);
-      });
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
   }, []);
 };
 

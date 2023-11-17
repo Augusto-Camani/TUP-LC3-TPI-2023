@@ -26,9 +26,7 @@ const NewProduct = () => {
       setFormValid(isValid);
     }, 300);
 
-    return () => {
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [instrument]);
 
   const changeHandler = ({ target: { value, type, name } }) =>

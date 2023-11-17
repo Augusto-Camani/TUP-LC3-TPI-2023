@@ -5,11 +5,11 @@ import useProducts from "../../custom/useAPIMethods/useProducts";
 import ProductItem from "../productItem/ProductItem";
 
 const Products = () => {
-  const { productsFiltered } = useAPI();
+  const { products } = useAPI();
 
   useProducts();
 
-  const productsMapped = productsFiltered.map((product) => (
+  const productsMapped = products.map((product) => (
     <ProductItem product={product} />
   ));
 

@@ -6,30 +6,31 @@ import { useAPI } from "../../services/apiContext/api.context";
 const EditProduct = ({ product, token, handleEdit }) => {
   const { putProduct } = useAPI();
   const productObjet = { ...product };
-  const [updateProduct, setUpdateProduct] = useState(productObjet);
+  const [updatedProduct, setUpdatedProduct] = useState(productObjet);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        updateProduct.instrument !== "" &&
-        updateProduct.price !== 0 &&
-        updateProduct.stock !== 0;
+        updatedProduct.instrument !== "" &&
+        updatedProduct.price !== 0 &&
+        updatedProduct.stock !== 0;
       setFormValid(isValid);
-    });
-  });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [updatedProduct]);
 
   const editHandler = () => handleEdit();
 
   const changeHandler = ({ target: { value, type, name } }) => {
-    setUpdateProduct((prevInstrument) => ({
+    setUpdatedProduct((prevInstrument) => ({
       ...prevInstrument,
       [name]: type === "number" ? parseInt(value) : value,
     }));
   };
   const addChangeHandler = () => {
-    putProduct({ ...product, ...updateProduct, id: product.id }, token);
-    setUpdateProduct(productObjet);
+    putProduct({ ...product, ...updatedProduct, id: product.id }, token);
+    setUpdatedProduct(productObjet);
     editHandler();
   };
 
@@ -42,7 +43,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
             className="new-book-control"
             type="text"
             name="instrument"
-            value={updateProduct.instrument}
+            value={updatedProduct.instrument}
             onChange={changeHandler}
             placeholder={product.instrument}
           />
@@ -53,7 +54,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
             className="new-book-control"
             type="number"
             name="price"
-            value={updateProduct.price}
+            value={updatedProduct.price}
             onChange={changeHandler}
             placeholder={product.price}
             min="1"
@@ -66,7 +67,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
             className="new-book-control"
             type="number"
             name="stock"
-            value={updateProduct.stock}
+            value={updatedProduct.stock}
             onChange={changeHandler}
             placeholder={product.stock}
             min="1"

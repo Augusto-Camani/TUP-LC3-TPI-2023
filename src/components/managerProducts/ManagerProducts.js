@@ -1,18 +1,42 @@
 import { useState } from "react";
-import Table from "react-bootstrap/Table";
+import { Button, Table } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 import useProducts from "../../custom/useAPIMethods/useProducts";
+import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditProduct from "../editProduct/EditProduct";
 
 const ManagerProducts = () => {
-  const { products, deleteProduct } = useAPI();
+  const { products, setProducts } = useAPI();
   const { accessToken } = useAuth();
+  const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(0);
   const [currentProduct, setCurrentProduct] = useState({});
 
   useProducts();
+
+  const deleteProduct = async (id, token) => {
+    await fetch(`http://localhost:8000/products/${id}`, {
+      method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else
+          throw new Error(
+            "No se pudo eliminar el producto. Intentelo de nuevo"
+          );
+      }, useCatchRejectedFetch)
+      .then(() => {
+        setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
+      });
+  };
 
   const isEditingHandler = (product = {}) => {
     setCurrentProduct(product);
@@ -20,51 +44,88 @@ const ManagerProducts = () => {
   };
 
   const deleteProductHandler = (id) => {
-    deleteProduct(id, accessToken);
+    setIsDeleting(true);
+    setIdToDelete(id);
+  };
+
+  const cancelDelete = () => {
+    setIsDeleting(false);
+    setIdToDelete(0);
+  };
+
+  const confirmDelete = () => {
+    setIsDeleting(false);
+    setIdToDelete(0);
+    deleteProduct(idToDelete, accessToken);
   };
 
   return (
     <>
-      {!isEditing ? (
-        <Table striped bordered hover size="sm">
-          <thead>
-            <tr>
-              <th>id</th>
-              <th>instrumento</th>
-              <th>precio</th>
-              <th>stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr key={index}>
-                <td>{product.id}</td>
-                <td>{product.instrument}</td>
-                <td>{product.price}</td>
-                <td>{product.stock}</td>
-                <td>
-                  <button onClick={() => isEditingHandler(product)}>
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => {
-                      deleteProductHandler(product.id);
-                    }}
-                  >
-                    Borrar
-                  </button>
-                </td>
+      <div className="container d-flex justify-content-center m-auto my-5 p-3">
+        {!isEditing && !isAdding ? (
+          <Table striped bordered hover className="w-auto">
+            <thead className="text-center">
+              <tr>
+                <th>ID</th>
+                <th>INSTRUMENTO</th>
+                <th>PRECIO</th>
+                <th>STOCK</th>
+                <th>OPCIONES</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <EditProduct
-          product={currentProduct}
-          token={accessToken}
-          handleEdit={isEditingHandler}
-        />
-      )}
+            </thead>
+            <tbody>
+              {products.map((product, index) => (
+                <tr key={index}>
+                  <td>{product.id}</td>
+                  <td>{product.instrument}</td>
+                  <td className="text-end">$ {product.price}</td>
+                  <td className="text-end">{product.stock}</td>
+                  <td className="d-flex justify-content-evenly">
+                    {idToDelete !== product.id ? (
+                      <>
+                        <Button
+                          className="m-auto p-1"
+                          onClick={() => isEditingHandler(product)}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          className="m-auto p-1"
+                          onClick={() => {
+                            deleteProductHandler(product.id);
+                          }}
+                        >
+                          Borrar
+                        </Button>
+                      </>
+                    ) : (
+                      isDeleting && (
+                        <>
+                          <Button className="m-auto p-1" onClick={cancelDelete}>
+                            Cancelar
+                          </Button>
+                          <Button
+                            className="m-auto p-1"
+                            onClick={confirmDelete}
+                          >
+                            Confirmar
+                          </Button>
+                        </>
+                      )
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        ) : (
+          <EditProduct
+            product={currentProduct}
+            token={accessToken}
+            handleEdit={isEditingHandler}
+          />
+        )}
+      </div>
     </>
   );
 };

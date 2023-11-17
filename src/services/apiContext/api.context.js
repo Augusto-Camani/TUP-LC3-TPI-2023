@@ -23,6 +23,7 @@ export const APIContextProvider = ({ children }) => {
 
   //Mover a sus respectivos componentes NewProduct, EditProduct, DeleteProduct
   const postProduct = async (product, token) => {
+    toggleLoading(true);
     const newProduct = { id: products[products.length - 1].id + 1, ...product };
 
     await fetch("http://localhost:8000/products", {
@@ -40,7 +41,9 @@ export const APIContextProvider = ({ children }) => {
       }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => [...prevProducts, newProduct]);
-      });
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
   };
 
   const putProduct = async (product, token) => {
@@ -61,49 +64,12 @@ export const APIContextProvider = ({ children }) => {
         setProducts((prevProducts) =>
           prevProducts.map((p) => (p.id === product.id ? product : p))
         );
-      });
-  };
-
-  const deleteProduct = async (id, token) => {
-    await fetch(`http://localhost:8000/products/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "No se pudo eliminar el producto. Intentelo de nuevo"
-          );
-      }, useCatchRejectedFetch)
-      .then(() => {
-        setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
-      });
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
   };
 
   //Mover a sus respectivos componentes ManageUsers, NewUser, EditUser, DeleteUser
-
-  const getUsers = async (token) => {
-    await fetch("http://localhost:8000/users", {
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "Hubo un problema. Si el problema persiste contacte a soporte"
-          );
-      }, useCatchRejectedFetch)
-      .then((usersData) => {
-        setUsers(usersData);
-      });
-  };
 
   const postUser = async (user, token) => {
     const newUser = { id: users[users.length - 1].id + 1, ...user };
@@ -146,27 +112,10 @@ export const APIContextProvider = ({ children }) => {
       });
   };
 
-  const deleteUser = async (id, token) => {
-    await fetch(`http://localhost:8000/users/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error("No se pudo eliminar el usuario. Intentelo de nuevo");
-      }, useCatchRejectedFetch)
-      .then(() => {
-        setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
-      });
-  };
-
   //Mover a sus respectivos componentes ManageSales, PurchaseHistory, Cart, EditSale, DeleteSale
 
   const getSales = async (token) => {
+    toggleLoading(true);
     await fetch("http://localhost:8000/sales", {
       headers: {
         "content-type": "application/json",
@@ -182,7 +131,9 @@ export const APIContextProvider = ({ children }) => {
       }, useCatchRejectedFetch)
       .then((salesData) => {
         setSales(salesData);
-      });
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
   };
 
   const getPurchaseHistory = (id, token) => {
@@ -280,11 +231,8 @@ export const APIContextProvider = ({ children }) => {
         setCart,
         postProduct,
         putProduct,
-        deleteProduct,
-        getUsers,
         postUser,
         putUser,
-        deleteUser,
         getSales,
         getPurchaseHistory,
         postSale,
