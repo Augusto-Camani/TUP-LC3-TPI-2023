@@ -39,9 +39,9 @@ const NavBar = () => {
                       <NavDropdown.Item as={Link} to="/manageUsers">
                         Usuarios
                       </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/manageSales">
+                      {/* <NavDropdown.Item as={Link} to="/manageSales">
                         Ventas
-                      </NavDropdown.Item>
+                      </NavDropdown.Item> */}
                     </>
                   )
                 )}
