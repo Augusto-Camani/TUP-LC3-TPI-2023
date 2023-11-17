@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useAPI } from "../../services/apiContext/api.context";
-import useProducts from "../../custom/useAPIMethods/useProducts";
+import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-const EditProduct = ({ token, handleEdit }) => {
+import { useAPI } from "../../services/apiContext/api.context";
+
+const EditProduct = ({ product, token, handleEdit }) => {
   const { putProduct } = useAPI();
-  const productObjet = { id: 0, instrument: "", price: 0, stock: 0 };
+  const productObjet = { ...product };
   const [updateProduct, setUpdateProduct] = useState(productObjet);
   const [formValid, setFormValid] = useState(false);
 
@@ -28,7 +28,7 @@ const EditProduct = ({ token, handleEdit }) => {
     }));
   };
   const addChangeHandler = () => {
-    putProduct({ id: 1, ...updateProduct }, token);
+    putProduct({ ...product, ...updateProduct, id: product.id }, token);
     setUpdateProduct(productObjet);
     editHandler();
   };
@@ -44,7 +44,7 @@ const EditProduct = ({ token, handleEdit }) => {
             name="instrument"
             value={updateProduct.instrument}
             onChange={changeHandler}
-            placeholder="instrumento"
+            placeholder={product.instrument}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -55,6 +55,7 @@ const EditProduct = ({ token, handleEdit }) => {
             name="price"
             value={updateProduct.price}
             onChange={changeHandler}
+            placeholder={product.price}
             min="1"
             step="1"
           />
@@ -67,6 +68,7 @@ const EditProduct = ({ token, handleEdit }) => {
             name="stock"
             value={updateProduct.stock}
             onChange={changeHandler}
+            placeholder={product.stock}
             min="1"
             step="1"
           />
