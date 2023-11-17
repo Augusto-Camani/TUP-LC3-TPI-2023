@@ -11,10 +11,10 @@ import { APIContextProvider } from "./services/apiContext/api.context";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <APIContextProvider>
-      <AuthenticationContextProvider>
+    <AuthenticationContextProvider>
+      <APIContextProvider>
         <App />
-      </AuthenticationContextProvider>
-    </APIContextProvider>
+      </APIContextProvider>
+    </AuthenticationContextProvider>
   </React.StrictMode>
 );

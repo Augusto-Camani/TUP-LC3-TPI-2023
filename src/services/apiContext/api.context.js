@@ -194,6 +194,7 @@ export const APIContextProvider = ({ children }) => {
       },
     })
       .then((response) => {
+        console.log(response);
         if (response.ok) return response.json();
         else
           throw new Error(
