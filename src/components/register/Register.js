@@ -26,6 +26,8 @@ const Register = () => {
       }),
     }).then((response) => {
       if (response.ok) return response.json();
+      if (response.status === 400)
+        throw new Error("Ese email ya se encuentra registrado");
       else {
         throw new Error("No se pudo registrar su usuario. Intentelo de nuevo");
       }
