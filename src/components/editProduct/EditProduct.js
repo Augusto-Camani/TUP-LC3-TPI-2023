@@ -3,9 +3,10 @@ import { useAPI } from "../../services/apiContext/api.context";
 import useProducts from "../../custom/useAPIMethods/useProducts";
 import { Button, Form } from "react-bootstrap";
 
-const EditProduct = ({ token, product, handleEdit }) => {
-  const { productsFiltered, putProduct, deleteProduct } = useAPI();
-  const [updateProduct, setUpdateProduct] = useState(product);
+const EditProduct = ({ token, handleEdit }) => {
+  const { putProduct } = useAPI();
+  const productObjet = { id: 0, instrument: "", price: 0, stock: 0 };
+  const [updateProduct, setUpdateProduct] = useState(productObjet);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const EditProduct = ({ token, product, handleEdit }) => {
   };
   const addChangeHandler = () => {
     putProduct({ id: 1, ...updateProduct }, token);
-    setUpdateProduct(product);
+    setUpdateProduct(productObjet);
     editHandler();
   };
 
