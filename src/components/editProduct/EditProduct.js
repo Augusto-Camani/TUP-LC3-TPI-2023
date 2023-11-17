@@ -3,10 +3,9 @@ import { useAPI } from "../../services/apiContext/api.context";
 import useProducts from "../../custom/useAPIMethods/useProducts";
 import { Button, Form } from "react-bootstrap";
 
-const EditProduct = ({ accessToken }) => {
-  const instrumentObject = { id: 1, instrument: "", price: 0, stock: 0 };
-  const { productsFiltered, putProduct } = useAPI();
-  const [updateProduct, setUpdateProduct] = useState(instrumentObject);
+const EditProduct = ({ token, product, handleEdit }) => {
+  const { productsFiltered, putProduct, deleteProduct } = useAPI();
+  const [updateProduct, setUpdateProduct] = useState(product);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
@@ -19,6 +18,8 @@ const EditProduct = ({ accessToken }) => {
     });
   });
 
+  const editHandler = () => handleEdit();
+
   const changeHandler = ({ target: { value, type, name } }) => {
     setUpdateProduct((prevInstrument) => ({
       ...prevInstrument,
@@ -26,9 +27,9 @@ const EditProduct = ({ accessToken }) => {
     }));
   };
   const addChangeHandler = () => {
-    console.log({ id: 1, ...updateProduct }, accessToken);
-    putProduct({ id: 1, ...updateProduct }, accessToken);
-    setUpdateProduct(instrumentObject);
+    putProduct({ id: 1, ...updateProduct }, token);
+    setUpdateProduct(product);
+    editHandler();
   };
 
   return (
@@ -70,7 +71,7 @@ const EditProduct = ({ accessToken }) => {
           />
         </Form.Group>
         <Form.Group>
-          <Button>Cancelar</Button>
+          <Button onClick={editHandler}>Cancelar</Button>
           <Button disabled={!formValid} onClick={addChangeHandler}>
             Subir Producto
           </Button>

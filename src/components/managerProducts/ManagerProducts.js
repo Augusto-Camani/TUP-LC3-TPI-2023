@@ -4,14 +4,18 @@ import useProducts from "../../custom/useAPIMethods/useProducts";
 import Table from "react-bootstrap/Table";
 import EditProduct from "../editProduct/EditProduct";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
+
 const ManagerProducts = () => {
-  const { productsFiltered, putProduct } = useAPI();
+  const { productsFiltered, deleteProduct } = useAPI();
   const { accessToken } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
   useProducts();
   const editHandler = () => {
-    setIsEditing(true);
+    setIsEditing((prev) => !prev);
+  };
+  const deleteProductHandler = (id) => {
+    deleteProduct(id, accessToken);
   };
   return (
     <>
@@ -34,14 +38,20 @@ const ManagerProducts = () => {
                 <td>{instrument.stock}</td>
                 <td>
                   <button onClick={editHandler}>Editar</button>
-                  <button>Borrar </button>
+                  <button
+                    onClick={() => {
+                      deleteProductHandler(instrument.id);
+                    }}
+                  >
+                    Borrar{" "}
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
       ) : (
-        <EditProduct token={accessToken} />
+        <EditProduct token={accessToken} handleEdit={editHandler} />
       )}
     </>
   );

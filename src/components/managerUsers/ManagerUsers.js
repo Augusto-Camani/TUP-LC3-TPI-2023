@@ -1,78 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
+import { useAPI } from "../../services/apiContext/api.context";
+import Table from "react-bootstrap/Table";
+import EditProduct from "../editProduct/EditProduct";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const ManagerUsers = () => {
+const ManagerProducts = () => {
+  const { productsFiltered, deleteProduct } = useAPI();
+  const { accessToken } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const { getUsers, usersFiltered, users } = useAPI();
+
+  const editHandler = () => {
+    setIsEditing((prev) => !prev);
+  };
+  const deleteProductHandler = (id) => {
+    deleteProduct(id, accessToken);
+  };
   return (
-    <div className="container">
-      <div>
-        <form>
-          <input
-            type="text"
-            name="instrument"
-            placeholder="nombre del instrumento "
-            value={newInstrument.instrument}
-            onChange={changeHandler}
-          />
-          <input
-            type="number"
-            name="price"
-            min="1"
-            step="1"
-            placeholder="10 "
-            value={newInstrument.price}
-            onChange={changeHandler}
-          />
-          <input
-            type="number"
-            name="stock"
-            min="1"
-            step="1"
-            placeholder="stock del instrumento "
-            value={newInstrument.stock}
-            onChange={changeHandler}
-          />
-          <button disabled={!formValid} onClick={addProductHandler}>
-            add
-          </button>
-        </form>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>id</th>
-            <br />
-            <th>product</th>
-            <br />
-            <th>price</th>
-            <br />
-            <th>stock</th>
-          </tr>
-        </thead>
-        <tbody style={{}}>
-          {productsFiltered.map((instrument, index) =>
-            instrument.id === editID ? (
-              <Edit current={instrument} list={[newInstrument]} />
-            ) : (
+    <>
+      {!isEditing ? (
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>nombre</th>
+              <th>mail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usersFiltered.map((users, index) => (
               <tr key={index}>
-                <td>{instrument.id}</td>
-                <br />
-                <td>{instrument.instrument}</td>
-                <br />
-                <td>{instrument.price}</td>
-                <br />
-                <td>{instrument.stock}</td>
+                <td>{users.id}</td>
+                <td>{users.name}</td>
+                <td>{users.mail}</td>
                 <td>
-                  <button onClick={() => editProductHandler(instrument.id)}>
-                    edit
+                  <button onClick={editHandler}>Editar</button>
+                  <button
+                    onClick={() => {
+                      deleteProductHandler(users.id);
+                    }}
+                  >
+                    Borrar{" "}
                   </button>
-                  <button>delete</button>
                 </td>
               </tr>
-            )
-          )}
-        </tbody>
-      </table>
-    </div>
+            ))}
+          </tbody>
+        </Table>
+      ) : (
+        <EditProduct token={accessToken} handleEdit={editHandler} />
+      )}
+    </>
   );
 };
 
-export default ManagerUsers;
+export default ManagerProducts;

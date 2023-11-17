@@ -18,13 +18,7 @@ import AccountSettings from "./components/accountSettings/accountSettings";
 import Products from "./components/products/Products";
 import Cart from "./components/cart/Cart";
 import ManagerProducts from "./components/managerProducts/ManagerProducts";
-
-//temenos que implementar estas consignas:{
-//Utilizar Context en al menos un caso de uso.
-//Enrutado dinámico establecido mediante la librería “react-router” para aprovechamiento e implementación de conceptos de SPA
-//Crear al menos un ABM (alta, baja y modificación) mediante el uso de formularios,modales y otras herramientas disponibles.
-//Consumo de API para la gestión de datos.
-
+import ManagerUsers from "./components/managerUsers/ManagerUsers";
 const App = () => {
   const { isLoading } = useAPI();
   const admin = ["admin", "sysadmin"];
@@ -101,6 +95,15 @@ const App = () => {
         <Protected allowedRole={admin}>
           <Navbar />
           <ManagerProducts />
+        </Protected>
+      ),
+    },
+    {
+      path: "/managerusers",
+      element: (
+        <Protected allowedRole={admin}>
+          <Navbar />
+          <ManagerUsers />
         </Protected>
       ),
     },
