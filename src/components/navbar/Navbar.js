@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Container,
-  Form,
-  Nav,
-  Navbar,
-  NavDropdown,
-} from "react-bootstrap";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
@@ -28,9 +21,6 @@ const NavBar = () => {
           >
             <Nav.Link as={Link} to="/products">
               Productos
-            </Nav.Link>
-            <Nav.Link as={Link} to="/cart">
-              Carrito
             </Nav.Link>
             {["sysadmin", "admin"].includes(
               user ? user.userType : "unsigned"
@@ -70,19 +60,10 @@ const NavBar = () => {
                 {user ? "Cerrar sesión" : "Iniciar sesión"}
               </NavDropdown.Item>
             </NavDropdown>
-            {/* <Nav.Link to="#" disabled>
-                Link
-              </Nav.Link> */}
           </Nav>
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
+          <Nav.Link as={Link} to="/cart">
+            Ver el carrito
+          </Nav.Link>
         </Navbar.Collapse>
       </Container>
     </Navbar>

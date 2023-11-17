@@ -14,10 +14,10 @@ import Navbar from "./components/navbar/Navbar";
 import Home from "./components/home/Home";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
-import Products from "./components/products/Products";
-import ManagerProducts from "./components/managerProducts/ManagerProducts";
-import NewProduct from "./components/newProduct/NewProduct";
 import AccountSettings from "./components/accountSettings/accountSettings";
+import Products from "./components/products/Products";
+import Cart from "./components/cart/Cart";
+import ManagerProducts from "./components/managerProducts/ManagerProducts";
 
 //temenos que implementar estas consignas:{
 //Utilizar Context en al menos un caso de uso.
@@ -69,6 +69,15 @@ const App = () => {
       ),
     },
     {
+      path: "/accountSettings",
+      element: (
+        <Protected allowedRole={user}>
+          <Navbar />
+          <AccountSettings />
+        </Protected>
+      ),
+    },
+    {
       path: "/products",
       element: (
         <>
@@ -78,38 +87,20 @@ const App = () => {
       ),
     },
     {
+      path: "/cart",
+      element: (
+        <Protected allowedRole={user}>
+          <Navbar />
+          <Cart />
+        </Protected>
+      ),
+    },
+    {
       path: "/manageproducts",
       element: (
         <Protected allowedRole={admin}>
           <Navbar />
           <ManagerProducts />
-        </Protected>
-      ),
-    },
-    {
-      path: "/newproduct",
-      element: (
-        <Protected allowedRole={admin}>
-          <Navbar />
-          <NewProduct />
-        </Protected>
-      ),
-    },
-    {
-      path: "/editProduct",
-      element: (
-        <Protected allowedRole={admin}>
-          <Navbar />
-          {/* <EditProduct /> */}
-        </Protected>
-      ),
-    },
-    {
-      path: "/accountSettings",
-      element: (
-        <Protected allowedRole={user}>
-          <Navbar />
-          <AccountSettings />
         </Protected>
       ),
     },

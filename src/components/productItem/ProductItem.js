@@ -3,8 +3,19 @@ import { useAPI } from "../../services/apiContext/api.context";
 
 const ProductItem = ({ product }) => {
   const { setCart } = useAPI();
+
   const addToCartHandler = () => {
-    setCart((prev) => [...prev, product]);
+    setCart((prevCart) => [
+      ...prevCart,
+      prevCart.includes({ id: product.id })
+        ? {}
+        : {
+            id: product.id,
+            instrument: product.instrument,
+            price: product.price,
+            quantity: 1,
+          },
+    ]);
   };
 
   return (

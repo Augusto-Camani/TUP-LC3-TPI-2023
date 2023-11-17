@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 import "./accountSettings.css";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
+import { useAPI } from "../../services/apiContext/api.context";
 
 const AccountSettings = () => {
-  const { user, putUser } = useAuth();
-  const [newPassword, setNewPassword] = useState("");
-  const [newEmail, setNewEmail] = useState("");
+  const { user } = useAuth();
+  const { putUser } = useAPI();
+  const [newUser, setNewUser] = useState({ email: "", password: "" });
 
   const ChangeSettingsHandler = () => {
-    putUser({ email: newEmail, password: newPassword }, user.accessToken);
-    setNewPassword("");
-    setNewEmail("");
+    putUser(
+      {
+        id: user.id,
+        email: newUser.email.length > 0 ? newUser.email : user.email,
+        password:
+          newUser.password.length > 0 ? newUser.password : user.password,
+        userType: user.userType,
+        ...newUser,
+      },
+      user.accessToken
+    );
+    setNewUser({ email: "", password: "" });
   };
+
+  const changeHandler = ({ target: { value, name } }) =>
+    setNewUser((prevNewUser) => ({ ...prevNewUser, [name]: value }));
 
   return (
     <div className="AccountSettings">
@@ -22,8 +35,9 @@ const AccountSettings = () => {
         </label>
         <input
           type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
+          name="password"
+          value={newUser.password}
+          onChange={changeHandler}
         />
       </div>
       <div>
@@ -31,9 +45,10 @@ const AccountSettings = () => {
           <b>Nuevo email:</b>
         </label>
         <input
-          type="text"
-          value={newEmail}
-          onChange={(e) => setNewEmail(e.target.value)}
+          type="email"
+          name="email"
+          value={newUser.email}
+          onChange={changeHandler}
         />
       </div>
       <button onClick={ChangeSettingsHandler}>
