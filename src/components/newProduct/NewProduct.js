@@ -1,95 +1,79 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 
 import "./NewProduct.css";
 
-import useProducts from "../../custom/useAPIMethods/useProducts";
 import { useAPI } from "../../services/apiContext/api.context";
-import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const NewProduct = () => {
-  const instrumentObject = { instrument: "", price: 0, stock: 0 };
+const NewProduct = ({ token, handleisAdding }) => {
   const { postProduct } = useAPI();
-  const { user } = useAuth();
-  const [instrument, setInstrument] = useState(instrumentObject);
+  const productObject = { instrument: "", price: 0, stock: 0 };
+  const [product, setProduct] = useState(productObject);
   const [formValid, setFormValid] = useState(false);
-
-  useProducts();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        instrument.name !== "" &&
-        instrument.price !== 0 &&
-        instrument.stock !== 0;
+        product.instrument !== "" && product.price !== 0 && product.stock !== 0;
       setFormValid(isValid);
     }, 300);
-
     return () => clearTimeout(timer);
-  }, [instrument]);
+  }, [product]);
+
+  const addHandler = () => handleisAdding();
 
   const changeHandler = ({ target: { value, type, name } }) =>
-    setInstrument((prevInstrument) => ({
+    setProduct((prevInstrument) => ({
       ...prevInstrument,
       [name]: type === "number" ? parseInt(value) : value,
     }));
 
-  const addProductHandler = () => {
-    postProduct(instrument, user.accessToken);
-    setInstrument(instrumentObject);
+  const saveNewHandler = () => {
+    postProduct(product, token);
+    setProduct(productObject);
+    addHandler();
   };
 
   return (
-    <div className="new-product">
+    <div className="container w-50">
       <Form>
-        <Form.Group className="new-book-controls">
+        <Form.Group className="mb-3">
           <Form.Label>Instrumento</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="text"
             name="instrument"
-            value={instrument.name}
+            value={product.name}
             onChange={changeHandler}
-            placeholder="Guitarra"
+            placeholder="ejemplo: Guitarra"
           />
         </Form.Group>
-        <Form.Group className="new-book-control">
+        <Form.Group className="mb-3">
           <Form.Label>Precio</Form.Label>
           <Form.Control
-            className="input-control"
             type="number"
             name="price"
-            value={instrument.price}
+            value={product.price}
             onChange={changeHandler}
-            placeholder="100000"
+            placeholder="ejemplo: 100000"
             min="1"
             step="1"
           />
         </Form.Group>
-        <Form.Group className="new-book-control">
+        <Form.Group className="mb-3">
           <Form.Label>Cantidad disponible</Form.Label>
           <Form.Control
-            className="input-control"
             type="number"
             name="stock"
-            value={instrument.stock}
+            value={product.stock}
             onChange={changeHandler}
-            placeholder="10"
+            placeholder="ejemplo: 100"
             min="1"
             step="1"
           />
         </Form.Group>
-        <Form.Group className="new-book-actions">
-          <Button as={Link} to="/products">
-            Cancelar
-          </Button>
-          <Button
-            disabled={!formValid}
-            onClick={addProductHandler}
-            as={Link}
-            to="/products"
-          >
+        <Form.Group>
+          <Button onClick={addHandler}>Cancelar</Button>
+          <Button disabled={!formValid} onClick={saveNewHandler}>
             Agregar Producto
           </Button>
         </Form.Group>

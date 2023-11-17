@@ -6,6 +6,7 @@ import { useAuth } from "../../services/authenticationContext/authentication.con
 import useProducts from "../../custom/useAPIMethods/useProducts";
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditProduct from "../editProduct/EditProduct";
+import NewProduct from "../newProduct/NewProduct";
 
 const ManagerProducts = () => {
   const { products, setProducts } = useAPI();
@@ -43,6 +44,8 @@ const ManagerProducts = () => {
     setIsEditing((prev) => !prev);
   };
 
+  const isAddingHandler = () => setIsAdding((prev) => !prev);
+
   const deleteProductHandler = (id) => {
     setIsDeleting(true);
     setIdToDelete(id);
@@ -61,8 +64,16 @@ const ManagerProducts = () => {
 
   return (
     <>
+      {!isAdding && (
+        <Button
+          className="d-flex justify-content-center m-auto my-5 p-3"
+          onClick={isAddingHandler}
+        >
+          Agregar nuevo instrumento
+        </Button>
+      )}
       <div className="container d-flex justify-content-center m-auto my-5 p-3">
-        {!isEditing && !isAdding ? (
+        {isEditing && isAdding && (
           <Table striped bordered hover className="w-auto">
             <thead className="text-center">
               <tr>
@@ -118,12 +129,16 @@ const ManagerProducts = () => {
               ))}
             </tbody>
           </Table>
-        ) : (
+        )}
+        {isEditing && (
           <EditProduct
             product={currentProduct}
             token={accessToken}
             handleEdit={isEditingHandler}
           />
+        )}
+        {isAdding && (
+          <NewProduct token={accessToken} handleIsAdding={isAddingHandler} />
         )}
       </div>
     </>

@@ -3,7 +3,7 @@ import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 
-const EditProduct = ({ product, token, handleEdit }) => {
+const EditProduct = ({ product, token, handleIsEditing }) => {
   const { putProduct } = useAPI();
   const productObjet = { ...product };
   const [updatedProduct, setUpdatedProduct] = useState(productObjet);
@@ -20,7 +20,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
     return () => clearTimeout(timer);
   }, [updatedProduct]);
 
-  const editHandler = () => handleEdit();
+  const editHandler = () => handleIsEditing();
 
   const changeHandler = ({ target: { value, type, name } }) => {
     setUpdatedProduct((prevInstrument) => ({
@@ -28,7 +28,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
       [name]: type === "number" ? parseInt(value) : value,
     }));
   };
-  const addChangeHandler = () => {
+  const saveEditHandler = () => {
     putProduct({ ...product, ...updatedProduct, id: product.id }, token);
     setUpdatedProduct(productObjet);
     editHandler();
@@ -40,7 +40,6 @@ const EditProduct = ({ product, token, handleEdit }) => {
         <Form.Group className="mb-3">
           <Form.Label>ingrese el nuevo nombre del instrumento:</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="text"
             name="instrument"
             value={updatedProduct.instrument}
@@ -51,7 +50,6 @@ const EditProduct = ({ product, token, handleEdit }) => {
         <Form.Group className="mb-3">
           <Form.Label>ingrese el nuevo precio:</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="number"
             name="price"
             value={updatedProduct.price}
@@ -64,7 +62,6 @@ const EditProduct = ({ product, token, handleEdit }) => {
         <Form.Group className="mb-3">
           <Form.Label>ingrese el nuevo stock:</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="number"
             name="stock"
             value={updatedProduct.stock}
@@ -76,7 +73,7 @@ const EditProduct = ({ product, token, handleEdit }) => {
         </Form.Group>
         <Form.Group>
           <Button onClick={editHandler}>Cancelar</Button>
-          <Button disabled={!formValid} onClick={addChangeHandler}>
+          <Button disabled={!formValid} onClick={saveEditHandler}>
             Subir Producto
           </Button>
         </Form.Group>
