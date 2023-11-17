@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
@@ -16,6 +16,13 @@ export const useAuth = () => {
 export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(userValue);
   const [accessToken, setAccessToken] = useState(null);
+
+  useEffect(() => {
+    const storedAccessToken = Cookies.get("accessToken");
+    if (storedAccessToken) {
+      setAccessToken(storedAccessToken);
+    }
+  }, []);
 
   const loginHandler = async (email, password) => {
     await fetch("http://localhost:8000/login", {
@@ -72,7 +79,14 @@ export const AuthenticationContextProvider = ({ children }) => {
 
   return (
     <AuthenticationContext.Provider
-      value={{ user, setUser, loginHandler, logoutHandler, registerHandler }}
+      value={{
+        user,
+        setUser,
+        loginHandler,
+        logoutHandler,
+        registerHandler,
+        accessToken,
+      }}
     >
       {children}
     </AuthenticationContext.Provider>

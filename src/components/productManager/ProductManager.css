@@ -1,0 +1,12 @@
+.div-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.add{
+    padding-right: 55%;
+}
+.produtcs{
+    text-align: center;
+    align-items: center;
+}
