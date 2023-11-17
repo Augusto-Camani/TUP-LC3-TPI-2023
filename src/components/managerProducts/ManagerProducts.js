@@ -64,7 +64,7 @@ const ManagerProducts = () => {
 
   return (
     <>
-      {!isAdding && (
+      {!isAdding && !isEditing && (
         <Button
           className="d-flex justify-content-center m-auto my-5 p-3"
           onClick={isAddingHandler}
@@ -73,7 +73,7 @@ const ManagerProducts = () => {
         </Button>
       )}
       <div className="container d-flex justify-content-center m-auto my-5 p-3">
-        {isEditing && isAdding && (
+        {!isEditing && !isAdding && (
           <Table striped bordered hover className="w-auto">
             <thead className="text-center">
               <tr>
@@ -130,14 +130,14 @@ const ManagerProducts = () => {
             </tbody>
           </Table>
         )}
-        {isEditing && (
+        {isEditing && !isAdding && (
           <EditProduct
             product={currentProduct}
             token={accessToken}
-            handleEdit={isEditingHandler}
+            handleIsEditing={isEditingHandler}
           />
         )}
-        {isAdding && (
+        {isAdding && !isEditing && (
           <NewProduct token={accessToken} handleIsAdding={isAddingHandler} />
         )}
       </div>

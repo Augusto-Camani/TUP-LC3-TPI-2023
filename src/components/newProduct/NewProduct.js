@@ -5,7 +5,7 @@ import "./NewProduct.css";
 
 import { useAPI } from "../../services/apiContext/api.context";
 
-const NewProduct = ({ token, handleisAdding }) => {
+const NewProduct = ({ token, handleIsAdding }) => {
   const { postProduct } = useAPI();
   const productObject = { instrument: "", price: 0, stock: 0 };
   const [product, setProduct] = useState(productObject);
@@ -20,7 +20,7 @@ const NewProduct = ({ token, handleisAdding }) => {
     return () => clearTimeout(timer);
   }, [product]);
 
-  const addHandler = () => handleisAdding();
+  const addHandler = () => handleIsAdding();
 
   const changeHandler = ({ target: { value, type, name } }) =>
     setProduct((prevInstrument) => ({
