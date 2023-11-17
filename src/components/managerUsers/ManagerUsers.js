@@ -5,7 +5,7 @@ import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditUser from "../editUser/EditUser";
-import NewUser from "../newUser/EditUser";
+import NewUser from "../newUser/NewUser";
 
 const ManagerProducts = () => {
   const { toggleLoading, users, setUsers } = useAPI();
