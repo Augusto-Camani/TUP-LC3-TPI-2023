@@ -39,12 +39,12 @@ const ManagerProducts = () => {
       });
   };
 
+  const isAddingHandler = () => setIsAdding((prev) => !prev);
+
   const isEditingHandler = (product = {}) => {
     setCurrentProduct(product);
     setIsEditing((prev) => !prev);
   };
-
-  const isAddingHandler = () => setIsAdding((prev) => !prev);
 
   const deleteProductHandler = (id) => {
     setIsDeleting(true);

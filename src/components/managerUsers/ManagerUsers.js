@@ -5,10 +5,12 @@ import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditUser from "../editUser/EditUser";
+import NewUser from "../newUser/EditUser";
 
 const ManagerProducts = () => {
   const { toggleLoading, users, setUsers } = useAPI();
   const { accessToken } = useAuth();
+  const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [idToDelete, setIdToDelete] = useState(0);
@@ -53,10 +55,10 @@ const ManagerProducts = () => {
       }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
-      })
-      .catch((error) => console.log(error.message))
-      .finally(() => toggleLoading(false));
+      });
   };
+
+  const isAddingHandler = () => setIsAdding((prev) => !prev);
 
   const isEditingHandler = (user = {}) => {
     setCurrentUser(user);
@@ -80,68 +82,85 @@ const ManagerProducts = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center m-auto my-5 p-3">
-      {!isEditing ? (
-        <Table striped bordered hover className="w-auto">
-          <thead className="text-center">
-            <tr>
-              <th>ID</th>
-              <th>EMAIL</th>
-              <th>CONTRASEÑA</th>
-              <th>TIPO DE USUARIO</th>
-              <th>OPCIONES</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td>{user.id}</td>
-                <td>{user.email}</td>
-                <td>{user.password}</td>
-                <td>{user.userType}</td>
-                <td className="d-flex justify-content-evenly">
-                  {idToDelete !== user.id ? (
-                    <>
-                      <Button
-                        className="m-auto p-1"
-                        onClick={() => isEditingHandler(user)}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        className="m-auto p-1"
-                        onClick={() => {
-                          deleteUserHandler(user.id);
-                        }}
-                      >
-                        Borrar
-                      </Button>
-                    </>
-                  ) : (
-                    isDeleting && (
+    <>
+      {!isAdding && !isEditing && (
+        <Button
+          className="d-flex justify-content-center m-auto my-5 p-3"
+          onClick={isAddingHandler}
+        >
+          Agregar nuevo usuario
+        </Button>
+      )}
+      <div className="container d-flex justify-content-center m-auto my-5 p-3">
+        {!isEditing && !isAdding && (
+          <Table striped bordered hover className="w-auto">
+            <thead className="text-center">
+              <tr>
+                <th>ID</th>
+                <th>EMAIL</th>
+                <th>CONTRASEÑA</th>
+                <th>TIPO DE USUARIO</th>
+                <th>OPCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr key={index}>
+                  <td>{user.id}</td>
+                  <td>{user.email}</td>
+                  <td>{user.password}</td>
+                  <td>{user.userType}</td>
+                  <td className="d-flex justify-content-evenly">
+                    {idToDelete !== user.id ? (
                       <>
-                        <Button className="m-auto p-1" onClick={cancelDelete}>
-                          Cancelar
+                        <Button
+                          className="m-auto p-1"
+                          onClick={() => isEditingHandler(user)}
+                        >
+                          Editar
                         </Button>
-                        <Button className="m-auto p-1" onClick={confirmDelete}>
-                          Confirmar
+                        <Button
+                          className="m-auto p-1"
+                          onClick={() => {
+                            deleteUserHandler(user.id);
+                          }}
+                        >
+                          Borrar
                         </Button>
                       </>
-                    )
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <EditUser
-          user={currentUser}
-          token={accessToken}
-          handleEdit={isEditingHandler}
-        />
-      )}
-    </div>
+                    ) : (
+                      isDeleting && (
+                        <>
+                          <Button className="m-auto p-1" onClick={cancelDelete}>
+                            Cancelar
+                          </Button>
+                          <Button
+                            className="m-auto p-1"
+                            onClick={confirmDelete}
+                          >
+                            Confirmar
+                          </Button>
+                        </>
+                      )
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+        {isEditing && !isAdding && (
+          <EditUser
+            product={currentUser}
+            token={accessToken}
+            handleIsEditing={isEditingHandler}
+          />
+        )}
+        {isAdding && !isEditing && (
+          <NewUser token={accessToken} handleIsAdding={isAddingHandler} />
+        )}
+      </div>
+    </>
   );
 };
 

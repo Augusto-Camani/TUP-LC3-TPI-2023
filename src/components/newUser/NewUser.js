@@ -3,32 +3,32 @@ import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 
-const NewProduct = ({ token, handleIsAdding }) => {
-  const { postProduct } = useAPI();
-  const productObject = { instrument: "", price: 0, stock: 0 };
-  const [product, setProduct] = useState(productObject);
+const NewUser = ({ token, handleIsAdding }) => {
+  const { postUser } = useAPI();
+  const userObject = { email: "", password: "", userType: "" };
+  const [user, setUser] = useState(userObject);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        product.instrument !== "" && product.price !== 0 && product.stock !== 0;
+        user.email !== "" && user.password !== "" && user.userType !== "";
       setFormValid(isValid);
     }, 300);
     return () => clearTimeout(timer);
-  }, [product]);
+  }, [user]);
 
   const addHandler = () => handleIsAdding();
 
   const changeHandler = ({ target: { value, type, name } }) =>
-    setProduct((prevInstrument) => ({
+    postUser((prevInstrument) => ({
       ...prevInstrument,
-      [name]: type === "number" ? parseInt(value) : value,
+      [name]: value,
     }));
 
   const saveNewHandler = () => {
-    postProduct(product, token);
-    setProduct(productObject);
+    postUser(user, token);
+    setUser(userObject);
     addHandler();
   };
 
@@ -39,34 +39,30 @@ const NewProduct = ({ token, handleIsAdding }) => {
           <Form.Label>Instrumento</Form.Label>
           <Form.Control
             type="text"
-            name="instrument"
-            value={product.name}
+            name="email"
+            value={user.email}
             onChange={changeHandler}
-            placeholder="ejemplo: Guitarra"
+            placeholder="ejemplo: Pepito"
           />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Precio</Form.Label>
           <Form.Control
-            type="number"
-            name="price"
-            value={product.price}
+            type="text"
+            name="password"
+            value={user.price}
             onChange={changeHandler}
-            placeholder="ejemplo: 100000"
-            min="1"
-            step="1"
+            placeholder="ejemplo: Pepito1234"
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Cantidad disponible</Form.Label>
+          <Form.Label>Tipo de usuario</Form.Label>
           <Form.Control
-            type="number"
-            name="stock"
-            value={product.stock}
+            type="text"
+            name="userType"
+            value={user.userType}
             onChange={changeHandler}
-            placeholder="ejemplo: 100"
-            min="1"
-            step="1"
+            placeholder="user/admin/sysadmin"
           />
         </Form.Group>
         <Form.Group>
@@ -80,4 +76,4 @@ const NewProduct = ({ token, handleIsAdding }) => {
   );
 };
 
-export default NewProduct;
+export default NewUser;
