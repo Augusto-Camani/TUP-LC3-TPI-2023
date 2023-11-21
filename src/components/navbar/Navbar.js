@@ -26,24 +26,23 @@ const NavBar = () => {
               user ? user.userType : "unsigned"
             ) && (
               <NavDropdown title="Administrar" id="navbarScrollingDropdown">
-                {user.userType === "admin" ? (
-                  <NavDropdown.Item as={Link} to="/products">
-                    Productos
-                  </NavDropdown.Item>
-                ) : (
-                  user.userType === "sysadmin" && (
-                    <>
-                      <NavDropdown.Item as={Link} to="/manageProducts">
-                        Productos
-                      </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/manageUsers">
-                        Usuarios
-                      </NavDropdown.Item>
-                      {/* <NavDropdown.Item as={Link} to="/manageSales">
+                {(user.userType === "admin" ||
+                  user.userType === "sysadmin") && (
+                  <>
+                    <NavDropdown.Item as={Link} to="/manageProducts">
+                      Productos
+                    </NavDropdown.Item>
+                    {user.userType === "sysadmin" && (
+                      <>
+                        <NavDropdown.Item as={Link} to="/manageUsers">
+                          Usuarios
+                        </NavDropdown.Item>
+                        {/* <NavDropdown.Item as={Link} to="/manageSales">
                         Ventas
                       </NavDropdown.Item> */}
-                    </>
-                  )
+                      </>
+                    )}
+                  </>
                 )}
               </NavDropdown>
             )}

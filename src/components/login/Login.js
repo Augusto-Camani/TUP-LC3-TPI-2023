@@ -7,12 +7,12 @@ import { useAuth } from "../../services/authenticationContext/authentication.con
 import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
 const Login = () => {
-  const { setUser, setAccessToken } = useAuth();
+  const { setUser, setAccessToken, setRefreshToken } = useAuth();
   const [userToLogin, setUserToLogin] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const loginHandler = async (email, password) => {
-    await fetch("https://tuxguitarsapi.onrender.com/login", {
+    await fetch("http://localhost:8000/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email: email, password: password }),
@@ -25,9 +25,10 @@ const Login = () => {
           );
       }, useCatchRejectedFetch)
       .then((response) => {
+        setAccessToken(response.accessToken);
+        setRefreshToken(response.refreshToken);
         Cookies.set("accessToken", response.accessToken);
         Cookies.set("refreshToken", response.refreshToken);
-        setAccessToken(response.accessToken);
         const currentUser = {
           id: response.id,
           email: response.email,

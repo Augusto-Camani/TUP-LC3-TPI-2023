@@ -5,8 +5,8 @@ import { useAPI } from "../../services/apiContext/api.context";
 
 const EditProduct = ({ product, token, handleIsEditing }) => {
   const { putProduct } = useAPI();
-  const productObjet = { ...product };
-  const [updatedProduct, setUpdatedProduct] = useState(productObjet);
+  const productObject = { ...product };
+  const [updatedProduct, setUpdatedProduct] = useState(productObject);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
@@ -22,15 +22,16 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
 
   const editHandler = () => handleIsEditing();
 
-  const changeHandler = ({ target: { value, type, name } }) => {
+  const changeHandler = ({ target: { name, type, value } }) => {
     setUpdatedProduct((prevInstrument) => ({
       ...prevInstrument,
       [name]: type === "number" ? parseInt(value) : value,
     }));
   };
+
   const saveEditHandler = () => {
     putProduct({ ...product, ...updatedProduct, id: product.id }, token);
-    setUpdatedProduct(productObjet);
+    setUpdatedProduct(productObject);
     editHandler();
   };
 
@@ -38,7 +39,7 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
     <div className="container w-50">
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label>ingrese el nuevo nombre del instrumento:</Form.Label>
+          <Form.Label>Ingrese el nuevo nombre del instrumento:</Form.Label>
           <Form.Control
             type="text"
             name="instrument"
@@ -48,7 +49,7 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>ingrese el nuevo precio:</Form.Label>
+          <Form.Label>Ingrese el nuevo precio:</Form.Label>
           <Form.Control
             type="number"
             name="price"
@@ -60,7 +61,7 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>ingrese el nuevo stock:</Form.Label>
+          <Form.Label>Ingrese el nuevo stock:</Form.Label>
           <Form.Control
             type="number"
             name="stock"
@@ -74,7 +75,7 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
         <Form.Group>
           <Button onClick={editHandler}>Cancelar</Button>
           <Button disabled={!formValid} onClick={saveEditHandler}>
-            Subir Producto
+            Editar Producto
           </Button>
         </Form.Group>
       </Form>

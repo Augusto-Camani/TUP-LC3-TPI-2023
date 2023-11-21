@@ -16,7 +16,7 @@ const Register = () => {
   });
 
   const registerHandler = async (email, password) => {
-    await fetch("https://tuxguitarsapi.onrender.com/register", {
+    await fetch("http://localhost:8000/register", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({

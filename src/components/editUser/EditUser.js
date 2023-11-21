@@ -3,34 +3,35 @@ import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 
-const EditUser = ({ user, token, handleEdit }) => {
+const EditUser = ({ user, token, handleIsEditing }) => {
   const { putUser } = useAPI();
-  const userObjet = { ...user };
-  const [updatedUser, setUpdatedUser] = useState(userObjet);
+  const userObject = { ...user };
+  const [updatedUser, setUpdatedUser] = useState(userObject);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const isValid =
-        updatedUser.instrument !== "" &&
-        updatedUser.price !== 0 &&
-        updatedUser.stock !== 0;
+        updatedUser.email !== "" &&
+        updatedUser.password !== "" &&
+        updatedUser.userType !== "";
       setFormValid(isValid);
     }, 300);
     return () => clearTimeout(timer);
   }, [updatedUser]);
 
-  const editHandler = () => handleEdit();
+  const editHandler = () => handleIsEditing();
 
-  const changeHandler = ({ target: { value, type, name } }) => {
+  const changeHandler = ({ target: { name, value } }) => {
     setUpdatedUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));
   };
+
   const addChangeHandler = () => {
     putUser({ ...user, ...updatedUser, id: user.id }, token);
-    setUpdatedUser(userObjet);
+    setUpdatedUser(userObject);
     editHandler();
   };
 
@@ -40,7 +41,6 @@ const EditUser = ({ user, token, handleEdit }) => {
         <Form.Group className="mb-3">
           <Form.Label>Ingrese el nuevo nombre del usuario:</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="text"
             name="email"
             value={updatedUser.email}
@@ -49,9 +49,8 @@ const EditUser = ({ user, token, handleEdit }) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Ingrese el nueva contraseña:</Form.Label>
+          <Form.Label>Ingrese la nueva contraseña:</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="text"
             name="password"
             value={updatedUser.password}
@@ -62,7 +61,6 @@ const EditUser = ({ user, token, handleEdit }) => {
         <Form.Group className="mb-3">
           <Form.Label>Ingrese el nuevo tipo de usuario :</Form.Label>
           <Form.Control
-            className="new-book-control"
             type="text"
             name="userType"
             value={updatedUser.userType}
@@ -73,7 +71,7 @@ const EditUser = ({ user, token, handleEdit }) => {
         <Form.Group>
           <Button onClick={editHandler}>Cancelar</Button>
           <Button disabled={!formValid} onClick={addChangeHandler}>
-            Cambiar usuario
+            Editar usuario
           </Button>
         </Form.Group>
       </Form>

@@ -21,8 +21,8 @@ import ManagerProducts from "./components/managerProducts/ManagerProducts";
 import ManagerUsers from "./components/managerUsers/ManagerUsers";
 const App = () => {
   const { isLoading } = useAPI();
-  const admin = ["admin", "sysadmin"];
-  const user = ["user", ...admin];
+  const admins = ["admin", "sysadmin"];
+  const users = ["user", ...admins];
 
   const router = createBrowserRouter([
     { path: "/", element: <Navigate to="/home" replace /> },
@@ -48,7 +48,7 @@ const App = () => {
     {
       path: "/logout",
       element: (
-        <Protected allowedRole={user}>
+        <Protected allowedRole={users}>
           <Logout />
         </Protected>
       ),
@@ -65,7 +65,7 @@ const App = () => {
     {
       path: "/accountSettings",
       element: (
-        <Protected allowedRole={user}>
+        <Protected allowedRole={users}>
           <Navbar />
           <AccountSettings />
         </Protected>
@@ -83,7 +83,7 @@ const App = () => {
     {
       path: "/cart",
       element: (
-        <Protected allowedRole={user}>
+        <Protected allowedRole={users}>
           <Navbar />
           <Cart />
         </Protected>
@@ -92,7 +92,7 @@ const App = () => {
     {
       path: "/manageProducts",
       element: (
-        <Protected allowedRole={admin}>
+        <Protected allowedRole={admins}>
           <Navbar />
           <ManagerProducts />
         </Protected>
@@ -101,7 +101,7 @@ const App = () => {
     {
       path: "/manageUsers",
       element: (
-        <Protected allowedRole={admin}>
+        <Protected>
           <Navbar />
           <ManagerUsers />
         </Protected>
@@ -110,7 +110,7 @@ const App = () => {
     {
       path: "/manageSales",
       element: (
-        <Protected allowedRole={admin}>
+        <Protected>
           <Navbar />
           {/* <ManagerSales /> */}
         </Protected>

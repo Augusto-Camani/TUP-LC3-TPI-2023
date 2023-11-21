@@ -7,7 +7,7 @@ const Protected = ({ children, allowedRole = ["sysadmin"] }) => {
   return allowedRole.includes(user ? user.userType : "unsigned") ? (
     children
   ) : (
-    <Navigate to="/" replace />
+    <Navigate to="/home" replace />
   );
 };
 

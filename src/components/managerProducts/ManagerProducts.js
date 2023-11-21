@@ -9,7 +9,7 @@ import EditProduct from "../editProduct/EditProduct";
 import NewProduct from "../newProduct/NewProduct";
 
 const ManagerProducts = () => {
-  const { products, setProducts } = useAPI();
+  const { toggleLoading, products, setProducts } = useAPI();
   const { accessToken } = useAuth();
   const [isAdding, setIsAdding] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -20,6 +20,7 @@ const ManagerProducts = () => {
   useProducts();
 
   const deleteProduct = async (id, token) => {
+    toggleLoading(true);
     await fetch(`http://localhost:8000/products/${id}`, {
       method: "DELETE",
       headers: {
@@ -36,7 +37,8 @@ const ManagerProducts = () => {
       }, useCatchRejectedFetch)
       .then(() => {
         setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
-      });
+      })
+      .finally(() => toggleLoading(false));
   };
 
   const isAddingHandler = () => setIsAdding((prev) => !prev);

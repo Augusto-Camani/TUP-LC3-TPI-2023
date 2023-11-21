@@ -26,7 +26,7 @@ export const APIContextProvider = ({ children }) => {
     toggleLoading(true);
     const newProduct = { id: products[products.length - 1].id + 1, ...product };
 
-    await fetch("https://tuxguitarsapi.onrender.com/products", {
+    await fetch("http://localhost:8000/products", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -47,7 +47,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const putProduct = (product, token) => {
-    fetch(`https://tuxguitarsapi.onrender.com/products/${product.id}`, {
+    fetch(`http://localhost:8000/products/${product.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -73,7 +73,7 @@ export const APIContextProvider = ({ children }) => {
 
   const postUser = async (user, token) => {
     const newUser = { id: users[users.length - 1].id + 1, ...user };
-    await fetch("https://tuxguitarsapi.onrender.com/users", {
+    await fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -92,7 +92,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const putUser = async (user, token) => {
-    await fetch(`https://tuxguitarsapi.onrender.com/users/${user.id}`, {
+    await fetch(`http://localhost:8000/users/${user.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -116,7 +116,7 @@ export const APIContextProvider = ({ children }) => {
 
   const getSales = async (token) => {
     toggleLoading(true);
-    await fetch("https://tuxguitarsapi.onrender.com/sales", {
+    await fetch("http://localhost:8000/sales", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
@@ -138,7 +138,7 @@ export const APIContextProvider = ({ children }) => {
 
   const getPurchaseHistory = (id, token) => {
     if (sales.length > 0) return;
-    fetch("https://tuxguitarsapi.onrender.com/sales", {
+    fetch("http://localhost:8000/sales", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
@@ -158,7 +158,7 @@ export const APIContextProvider = ({ children }) => {
 
   const postSale = async (sale, token) => {
     const newSale = { id: users[users.length - 1].id + 1, ...sale };
-    await fetch("https://tuxguitarsapi.onrender.com/sales", {
+    await fetch("http://localhost:8000/sales", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -179,7 +179,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const putSale = async (sale, token) => {
-    await fetch(`https://tuxguitarsapi.onrender.com/sales/${sale.id}`, {
+    await fetch(`http://localhost:8000/sales/${sale.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -199,7 +199,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const deleteSale = async (id, token) => {
-    await fetch(`https://tuxguitarsapi.onrender.com/sales/${id}`, {
+    await fetch(`http://localhost:8000/sales/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",

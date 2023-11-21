@@ -20,9 +20,9 @@ const NewUser = ({ token, handleIsAdding }) => {
 
   const addHandler = () => handleIsAdding();
 
-  const changeHandler = ({ target: { value, type, name } }) =>
-    postUser((prevInstrument) => ({
-      ...prevInstrument,
+  const changeHandler = ({ target: { value, name } }) =>
+    setUser((prevUser) => ({
+      ...prevUser,
       [name]: value,
     }));
 
@@ -36,21 +36,21 @@ const NewUser = ({ token, handleIsAdding }) => {
     <div className="container w-50">
       <Form>
         <Form.Group className="mb-3">
-          <Form.Label>Instrumento</Form.Label>
+          <Form.Label>Correo electronico</Form.Label>
           <Form.Control
             type="text"
             name="email"
             value={user.email}
             onChange={changeHandler}
-            placeholder="ejemplo: Pepito"
+            placeholder="ejemplo: pepito@gmail.com"
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Precio</Form.Label>
+          <Form.Label>Contraseña</Form.Label>
           <Form.Control
             type="text"
             name="password"
-            value={user.price}
+            value={user.password}
             onChange={changeHandler}
             placeholder="ejemplo: Pepito1234"
           />
@@ -68,7 +68,7 @@ const NewUser = ({ token, handleIsAdding }) => {
         <Form.Group>
           <Button onClick={addHandler}>Cancelar</Button>
           <Button disabled={!formValid} onClick={saveNewHandler}>
-            Agregar Producto
+            Agregar Usuario
           </Button>
         </Form.Group>
       </Form>

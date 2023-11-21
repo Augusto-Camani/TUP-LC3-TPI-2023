@@ -19,7 +19,7 @@ const ManagerProducts = () => {
   useEffect((token) => {
     if (users.length > 0) return;
     toggleLoading(true);
-    fetch("https://tuxguitarsapi.onrender.com/users", {
+    fetch("http://localhost:8000/users", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${token}`,
@@ -55,7 +55,8 @@ const ManagerProducts = () => {
       }, useCatchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
-      });
+      })
+      .finally(() => toggleLoading(false));
   };
 
   const isAddingHandler = () => setIsAdding((prev) => !prev);
@@ -151,7 +152,7 @@ const ManagerProducts = () => {
         )}
         {isEditing && !isAdding && (
           <EditUser
-            product={currentUser}
+            user={currentUser}
             token={accessToken}
             handleIsEditing={isEditingHandler}
           />
