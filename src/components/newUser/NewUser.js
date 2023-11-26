@@ -2,12 +2,41 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const NewUser = ({ token, handleIsAdding }) => {
-  const { postUser } = useAPI();
+const NewUser = ({ handleIsAdding }) => {
+  const { toggleLoading, users, setUsers } = useAPI();
+  const { accessToken } = useAuth();
   const userObject = { email: "", password: "", userType: "" };
   const [user, setUser] = useState(userObject);
   const [formValid, setFormValid] = useState(false);
+
+  const postUser = async () => {
+    const newUser = { id: users[users.length - 1].id + 1, ...user };
+    await fetch("http://localhost:8000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${accessToken()}`,
+      },
+      body: JSON.stringify(newUser),
+    })
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "No se pudo agregar el usuario. Intentelo de nuevo"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
+      .then(() => {
+        setUsers((prevUsers) => [...prevUsers, newUser]);
+      });
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,10 +55,17 @@ const NewUser = ({ token, handleIsAdding }) => {
       [name]: value,
     }));
 
-  const saveNewHandler = () => {
-    postUser(user, token);
-    setUser(userObject);
-    addHandler();
+  const saveNewHandler = async () => {
+    try {
+      toggleLoading(true);
+      await postUser();
+      setUser(userObject);
+      addHandler();
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      toggleLoading(false);
+    }
   };
 
   return (

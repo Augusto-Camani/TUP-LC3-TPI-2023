@@ -2,12 +2,42 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const NewProduct = ({ token, handleIsAdding }) => {
-  const { postProduct } = useAPI();
-  const productObject = { instrument: "", price: 0, stock: 0 };
+const NewProduct = ({ handleIsAdding }) => {
+  const { toggleLoading, products, setProducts } = useAPI();
+  const { accessToken } = useAuth();
+  const productObject = { instrument: "", price: "", stock: "" };
   const [product, setProduct] = useState(productObject);
   const [formValid, setFormValid] = useState(false);
+
+  const postProduct = async () => {
+    const newProduct = { id: products[products.length - 1].id + 1, ...product };
+
+    await fetch("http://localhost:8000/products", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${accessToken()}`,
+      },
+      body: JSON.stringify(newProduct),
+    })
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "No se pudo agregar el producto. Intentelo de nuevo"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
+      .then(() => {
+        setProducts((prevProducts) => [...prevProducts, newProduct]);
+      });
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -23,13 +53,25 @@ const NewProduct = ({ token, handleIsAdding }) => {
   const changeHandler = ({ target: { value, type, name } }) =>
     setProduct((prevInstrument) => ({
       ...prevInstrument,
-      [name]: type === "number" ? parseInt(value) : value,
+      [name]:
+        type === "number"
+          ? value.length > 0
+            ? parseInt(value)
+            : value
+          : value,
     }));
 
-  const saveNewHandler = () => {
-    postProduct(product, token);
-    setProduct(productObject);
-    addHandler();
+  const saveNewHandler = async () => {
+    try {
+      toggleLoading(true);
+      await postProduct();
+      setProduct(productObject);
+      addHandler();
+    } catch (error) {
+      alert(error);
+    } finally {
+      toggleLoading(false);
+    }
   };
 
   return (

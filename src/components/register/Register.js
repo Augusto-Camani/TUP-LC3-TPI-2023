@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 
-import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
-
 const Register = () => {
   const errors = [
     "Ingrese un E-Mail",
@@ -24,14 +22,25 @@ const Register = () => {
         password: password,
         userType: "user",
       }),
-    }).then((response) => {
-      if (response.ok) return response.json();
-      if (response.status === 400)
-        throw new Error("Ese email ya se encuentra registrado");
-      else {
-        throw new Error("No se pudo registrar su usuario. Intentelo de nuevo");
-      }
-    }, useCatchRejectedFetch);
+    })
+      .then(
+        (response) => {
+          if (response.ok) return;
+          if (response.status === 400)
+            throw new Error("Ese email ya se encuentra registrado");
+          else {
+            throw new Error(
+              "No se pudo registrar su usuario. Intentelo de nuevo"
+            );
+          }
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      });
   };
 
   const changeHandler = ({ target: { value, name } }) =>

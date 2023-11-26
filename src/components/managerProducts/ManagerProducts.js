@@ -4,7 +4,6 @@ import { Button, Table } from "react-bootstrap";
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 import useProducts from "../../custom/useAPIMethods/useProducts";
-import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditProduct from "../editProduct/EditProduct";
 import NewProduct from "../newProduct/NewProduct";
 
@@ -19,22 +18,27 @@ const ManagerProducts = () => {
 
   useProducts();
 
-  const deleteProduct = async (id, token) => {
+  const deleteProduct = async (id) => {
     toggleLoading(true);
     await fetch(`http://localhost:8000/products/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${accessToken()}`,
       },
     })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "No se pudo eliminar el producto. Intentelo de nuevo"
-          );
-      }, useCatchRejectedFetch)
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "No se pudo eliminar el producto. Intentelo de nuevo"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
       .then(() => {
         setProducts((prevProducts) => prevProducts.filter((p) => p.id !== id));
       })
@@ -58,10 +62,14 @@ const ManagerProducts = () => {
     setIdToDelete(0);
   };
 
-  const confirmDelete = () => {
-    setIsDeleting(false);
-    setIdToDelete(0);
-    deleteProduct(idToDelete, accessToken);
+  const confirmDelete = async () => {
+    try {
+      await deleteProduct(idToDelete);
+      setIsDeleting(false);
+      setIdToDelete(0);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -135,12 +143,11 @@ const ManagerProducts = () => {
         {isEditing && !isAdding && (
           <EditProduct
             product={currentProduct}
-            token={accessToken}
             handleIsEditing={isEditingHandler}
           />
         )}
         {isAdding && !isEditing && (
-          <NewProduct token={accessToken} handleIsAdding={isAddingHandler} />
+          <NewProduct handleIsAdding={isAddingHandler} />
         )}
       </div>
     </>

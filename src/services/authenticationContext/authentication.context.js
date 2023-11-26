@@ -1,12 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
 const AuthenticationContext = createContext();
 
 const userValue = JSON.parse(localStorage.getItem("user"));
-const accessValue = Cookies.get("accessToken");
-const refreshValue = Cookies.get("refreshToken");
 
 export const useAuth = () => {
   const context = useContext(AuthenticationContext);
@@ -16,46 +13,50 @@ export const useAuth = () => {
 
 export const AuthenticationContextProvider = ({ children }) => {
   const [user, setUser] = useState(userValue);
-  const [accessToken, setAccessToken] = useState(accessValue);
-  const [refreshToken, setRefreshToken] = useState(refreshValue);
+  const accessToken = () => Cookies.get("accessToken");
+  const setAccessToken = (value) =>
+    Cookies.set("accessToken", value, {
+      secure: true,
+      expires: 1 / 24,
+    });
+  const refreshToken = () => Cookies.get("refreshToken");
+  const setRefreshToken = (value) =>
+    Cookies.set("refreshToken", value, { secure: true, expires: 1 });
 
   const refresh = async () => {
-    if (refreshToken) {
+    if (!accessToken() && refreshToken()) {
       await fetch("http://localhost:8000/refresh-token", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          token: refreshToken,
-        }),
+        body: JSON.stringify({ token: refreshToken() }),
       })
+        .then(
+          (response) => {
+            if (response.ok) return response.json();
+            if (response.status === 400)
+              throw new Error("El token de actualización ha expirado");
+          },
+          () => {
+            throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+          }
+        )
         .then((response) => {
-          if (response.ok) return response.json();
-          if (response.status === 400)
-            throw new Error("El token de actualización ha expirado");
-        }, useCatchRejectedFetch)
-        .then((response) => {
-          Cookies.set("accessToken", response.accessToken);
-          Cookies.set("refreshToken", response.refreshToken);
           setAccessToken(response.accessToken);
           setRefreshToken(response.refreshToken);
         })
         .catch(() => logoutHandler());
-    }
+    } else if (!refreshToken()) logoutHandler();
   };
 
   useEffect(() => {
-    if (accessToken) {
-      refresh();
-      setInterval(refresh, 3600000);
-    }
+    refresh();
+    setInterval(refresh, 3600000);
   }, []);
 
   const logoutHandler = () => {
     localStorage.removeItem("user");
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
-    setAccessToken(null);
-    setRefreshToken(null);
     setUser(null);
   };
 
@@ -66,7 +67,6 @@ export const AuthenticationContextProvider = ({ children }) => {
         setUser,
         accessToken,
         setAccessToken,
-        refreshToken,
         setRefreshToken,
         logoutHandler,
       }}

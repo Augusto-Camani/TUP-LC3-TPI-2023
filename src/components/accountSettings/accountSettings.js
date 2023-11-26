@@ -1,23 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Table } from "react-bootstrap";
+
 import "./accountSettings.css";
+
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 import { useAPI } from "../../services/apiContext/api.context";
 
 const AccountSettings = () => {
-  const errors = [
-    "Complete alguno de los campos",
-    "Ingrese un E-Mail",
-    "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número",
-  ];
   const { user, accessToken } = useAuth();
-  const { putUser, getPurchaseHistory, sales } = useAPI();
+  const { toggleLoading, putUser } = useAPI();
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [newUser, setNewUser] = useState({ ...user });
-  const [clicked, setClicked] = useState(false);
 
-  const showPurchasesHandler = () => {
-    getPurchaseHistory(user.id, accessToken);
-    setClicked(true);
+  const getPurchaseHistory = async (id) => {
+    if (purchaseHistory.length > 0) return;
+    await fetch("http://localhost:8000/sales", {
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${accessToken()}`,
+      },
+    })
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "Hubo un problema. Si el problema persiste contacte a soporte"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
+      .then((salesData) => {
+        setPurchaseHistory(salesData.filter((s) => s.userID === id));
+      });
   };
 
   const ChangeSettingsHandler = async () => {
@@ -26,9 +43,10 @@ const AccountSettings = () => {
         (newUser.email === user.email && newUser.password === user.password) ||
         (!newUser.email.length > 0 && !newUser.password.length > 0)
       )
-        throw new Error(errors[0]);
+        throw new Error("Complete alguno de los campos");
       if (newUser.email.length > 0) {
-        if (!/\S+@\S+\.\S+/.test(newUser.email)) throw new Error(errors[1]);
+        if (!/\S+@\S+\.\S+/.test(newUser.email))
+          throw new Error("Ingrese un E-Mail");
       }
       if (newUser.password.length > 0) {
         if (
@@ -36,9 +54,12 @@ const AccountSettings = () => {
           !/\p{Lu}/u.test(newUser.password) ||
           !/\d/.test(newUser.password)
         ) {
-          throw new Error(errors[2]);
+          throw new Error(
+            "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número"
+          );
         }
       }
+      toggleLoading(true);
       await putUser(
         {
           id: newUser.id,
@@ -54,6 +75,8 @@ const AccountSettings = () => {
       alert("Ajustes guardados correctamente");
     } catch (error) {
       alert(error.message);
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -94,33 +117,35 @@ const AccountSettings = () => {
       </div>
       <div>
         <h2>Historial de compras</h2>
-        <div>
-          <Table striped bordered hover size="sm">
-            <thead>
-              <tr>
-                <th>id de Venta</th>
-                <th>instrumento</th>
-                <th>precio</th>
-                <th>cantidad</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sales.map((sale) =>
-                sale.content.map((item, index) => (
-                  <tr key={index}>
-                    <td>{sale.id}</td>
-                    <td>{item.instrument}</td>
-                    <td>{item.price}</td>
-                    <td>{item.quantity}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </Table>
-        </div>
-        {!clicked && (
-          <button onClick={showPurchasesHandler}>Mostrar compras</button>
-        )}
+        <button
+          onClick={() => {
+            getPurchaseHistory();
+          }}
+        >
+          Mostrar compras
+        </button>
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>id de Venta</th>
+              <th>instrumento</th>
+              <th>precio</th>
+              <th>cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            {purchaseHistory.map((sale) =>
+              sale.content.map((item, index) => (
+                <tr key={index}>
+                  <td>{sale.id}</td>
+                  <td>{item.instrument}</td>
+                  <td>{item.price}</td>
+                  <td>{item.quantity}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>
       </div>
     </div>
   );

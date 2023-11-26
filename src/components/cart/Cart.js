@@ -1,38 +1,53 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { useAuth } from "../../services/authenticationContext/authentication.context";
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
+import useProducts from "../../custom/useAPIMethods/useProducts";
 import CartItem from "../cartItem/CartItem";
 
 const Cart = () => {
+  const {
+    toggleLoading,
+    sales,
+    setSales,
+    products,
+    cart,
+    setCart,
+    putProduct,
+    getSales,
+    postSale,
+  } = useAPI();
   const { user, accessToken } = useAuth();
-  const { products, cart, setCart, putProduct, postSale } = useAPI();
   const navigate = useNavigate();
   const [sale, setSale] = useState({ userID: user.id, content: cart });
-  const [error, setError] = useState();
+
+  useProducts();
+
+  useEffect(() => {
+    if (sales.length > 0) return;
+    getSales(accessToken());
+  }, []);
 
   useEffect(
     () => setSale((prevSale) => ({ ...prevSale, content: cart })),
     [cart]
   );
 
-  const buyHandler = () => {
-    try {
-      postSale(sale, accessToken);
-      cart.forEach((product) => {
-        const editedProduct = products.find((p) => p.id === product.id);
-        putProduct(
-          {
-            ...editedProduct,
-            stock: product.stock - editedProduct.quantity,
-          },
-          accessToken
-        );
-      });
-    } catch (error) {
-      setError(error.message);
-    }
+  const buyHandler = async () => {
+    await postSale(sale, accessToken());
+
+    cart.forEach((product) => {
+      const productToUpdate = products.find((p) => p.id === product.id);
+      putProduct(
+        {
+          ...productToUpdate,
+          stock: productToUpdate.stock - product.quantity,
+        },
+        accessToken()
+      );
+    });
+    setCart([]);
   };
 
   return (
@@ -53,7 +68,6 @@ const Cart = () => {
       >
         {cart.length > 0 ? "Finalizar compra" : "Volver a productos"}
       </button>
-      {error && <p>{error}</p>}
     </div>
   );
 };

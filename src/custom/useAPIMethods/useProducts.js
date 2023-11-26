@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-import useCatchRejectedFetch from "../useCatchRejectedFetch/useCatchRejectedFetch";
 import { useAPI } from "../../services/apiContext/api.context";
 
 const useProducts = () => {
@@ -12,13 +11,18 @@ const useProducts = () => {
     fetch("http://localhost:8000/products", {
       headers: { "content-type": "application/json" },
     })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "Hubo un problema. Si el problema persiste contacte a soporte"
-          );
-      }, useCatchRejectedFetch)
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "Hubo un problema. Si el problema persiste contacte a soporte"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
       .then((productsData) => {
         setProducts(productsData);
       })

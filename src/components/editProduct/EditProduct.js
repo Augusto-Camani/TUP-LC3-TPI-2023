@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
-const EditProduct = ({ product, token, handleIsEditing }) => {
+const EditProduct = ({ product, handleIsEditing }) => {
   const { putProduct } = useAPI();
+  const { accessToken } = useAuth();
   const productObject = { ...product };
   const [updatedProduct, setUpdatedProduct] = useState(productObject);
   const [formValid, setFormValid] = useState(false);
@@ -30,7 +32,10 @@ const EditProduct = ({ product, token, handleIsEditing }) => {
   };
 
   const saveEditHandler = () => {
-    putProduct({ ...product, ...updatedProduct, id: product.id }, token);
+    putProduct(
+      { ...product, ...updatedProduct, id: product.id },
+      accessToken()
+    );
     setUpdatedProduct(productObject);
     editHandler();
   };

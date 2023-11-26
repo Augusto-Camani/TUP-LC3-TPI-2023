@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
-import Cookies from "js-cookie";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
-import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 
 const Login = () => {
+  const navigate = useNavigate();
   const { setUser, setAccessToken, setRefreshToken } = useAuth();
   const [userToLogin, setUserToLogin] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
 
   const loginHandler = async (email, password) => {
     await fetch("http://localhost:8000/login", {
@@ -17,18 +15,21 @@ const Login = () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email: email, password: password }),
     })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "No se encontró un usuario con las credenciales proporcionadas"
-          );
-      }, useCatchRejectedFetch)
+      .then(
+        (response) => {
+          if (response.ok) return response.json();
+          else
+            throw new Error(
+              "No se encontró un usuario con las credenciales proporcionadas"
+            );
+        },
+        () => {
+          throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+        }
+      )
       .then((response) => {
         setAccessToken(response.accessToken);
         setRefreshToken(response.refreshToken);
-        Cookies.set("accessToken", response.accessToken);
-        Cookies.set("refreshToken", response.refreshToken);
         const currentUser = {
           id: response.id,
           email: response.email,

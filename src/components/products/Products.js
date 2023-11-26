@@ -9,12 +9,20 @@ const Products = () => {
 
   useProducts();
 
-  const productsMapped = products.map((product) => (
-    <ProductItem product={product} />
+  const productsMapped = products.map((product, index) => (
+    <ProductItem
+      key={index}
+      product={{
+        id: product.id,
+        instrument: product.instrument,
+        price: product.price,
+        stock: product.stock,
+      }}
+    />
   ));
 
   return (
-    <div className="Dashboard d-flex flex-wrap">
+    <div className="Dashboard d-flex flex-wrap justify-content-center">
       {productsMapped.length > 0 ? (
         productsMapped
       ) : (

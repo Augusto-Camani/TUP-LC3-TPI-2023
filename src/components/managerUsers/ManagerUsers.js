@@ -3,11 +3,10 @@ import { Button, Table } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
-import useCatchRejectedFetch from "../../custom/useCatchRejectedFetch/useCatchRejectedFetch";
 import EditUser from "../editUser/EditUser";
 import NewUser from "../newUser/NewUser";
 
-const ManagerProducts = () => {
+const ManagerUsers = () => {
   const { toggleLoading, users, setUsers } = useAPI();
   const { accessToken } = useAuth();
   const [isAdding, setIsAdding] = useState(false);
@@ -16,13 +15,17 @@ const ManagerProducts = () => {
   const [idToDelete, setIdToDelete] = useState(0);
   const [currentUser, setCurrentUser] = useState({});
 
-  useEffect((token) => {
+  const catchRejectedFetch = () => {
+    throw new Error("Error de servidor. Intentelo de nuevo más tarde");
+  };
+
+  useEffect(() => {
     if (users.length > 0) return;
     toggleLoading(true);
     fetch("http://localhost:8000/users", {
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${accessToken()}`,
       },
     })
       .then((response) => {
@@ -31,7 +34,7 @@ const ManagerProducts = () => {
           throw new Error(
             "Hubo un problema. Si el problema persiste contacte a soporte"
           );
-      }, useCatchRejectedFetch)
+      }, catchRejectedFetch)
       .then((usersData) => {
         setUsers(usersData);
       })
@@ -39,20 +42,20 @@ const ManagerProducts = () => {
       .finally(() => toggleLoading(false));
   }, []);
 
-  const deleteUser = async (id, token) => {
+  const deleteUser = async (id) => {
     toggleLoading(true);
     await fetch(`http://localhost:8000/users/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${accessToken()}`,
       },
     })
       .then((response) => {
         if (response.ok) return response.json();
         else
           throw new Error("No se pudo eliminar el usuario. Intentelo de nuevo");
-      }, useCatchRejectedFetch)
+      }, catchRejectedFetch)
       .then(() => {
         setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
       })
@@ -76,10 +79,14 @@ const ManagerProducts = () => {
     setIdToDelete(0);
   };
 
-  const confirmDelete = () => {
-    setIsDeleting(false);
-    setIdToDelete(0);
-    deleteUser(idToDelete, accessToken);
+  const confirmDelete = async () => {
+    try {
+      await deleteUser(idToDelete);
+      setIsDeleting(false);
+      setIdToDelete(0);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -115,13 +122,13 @@ const ManagerProducts = () => {
                     {idToDelete !== user.id ? (
                       <>
                         <Button
-                          className="m-auto p-1"
+                          className="mx-1 p-1"
                           onClick={() => isEditingHandler(user)}
                         >
                           Editar
                         </Button>
                         <Button
-                          className="m-auto p-1"
+                          className="mx-1 p-1"
                           onClick={() => {
                             deleteUserHandler(user.id);
                           }}
@@ -151,18 +158,12 @@ const ManagerProducts = () => {
           </Table>
         )}
         {isEditing && !isAdding && (
-          <EditUser
-            user={currentUser}
-            token={accessToken}
-            handleIsEditing={isEditingHandler}
-          />
+          <EditUser user={currentUser} handleIsEditing={isEditingHandler} />
         )}
-        {isAdding && !isEditing && (
-          <NewUser token={accessToken} handleIsAdding={isAddingHandler} />
-        )}
+        {isAdding && !isEditing && <NewUser handleIsAdding={isAddingHandler} />}
       </div>
     </>
   );
 };
 
-export default ManagerProducts;
+export default ManagerUsers;
