@@ -58,3 +58,31 @@ export const useUsers = () => {
       .finally(() => toggleLoading(false));
   }, []);
 };
+
+export const useSales = () => {
+  const { toggleLoading, sales, setSales } = useAPI();
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (sales.length > 0) return;
+    toggleLoading(true);
+    fetch("http://localhost:8000/sales", {
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${accessToken()}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
+      }, catchRejectedFetch)
+      .then((salesData) => {
+        setSales(salesData);
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
+  }, []);
+};

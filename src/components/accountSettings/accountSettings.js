@@ -12,7 +12,7 @@ const AccountSettings = () => {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [newUser, setNewUser] = useState({ ...user });
 
-  const getPurchaseHistory = async (id) => {
+  const getPurchaseHistory = async () => {
     if (purchaseHistory.length > 0) return;
     await fetch("http://localhost:8000/sales", {
       headers: {
@@ -33,7 +33,8 @@ const AccountSettings = () => {
         }
       )
       .then((salesData) => {
-        setPurchaseHistory(salesData.filter((s) => s.userID === id));
+        console.log(salesData);
+        setPurchaseHistory(salesData.filter((s) => s.userID === user.id));
       });
   };
 
@@ -122,7 +123,7 @@ const AccountSettings = () => {
             getPurchaseHistory();
           }}
         >
-          Mostrar compras
+          Mostrar historial de compras
         </button>
         <Table striped bordered hover size="sm">
           <thead>

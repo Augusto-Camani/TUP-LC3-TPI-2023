@@ -65,25 +65,6 @@ export const APIContextProvider = ({ children }) => {
       });
   };
 
-  const getSales = async (token) => {
-    await fetch("http://localhost:8000/sales", {
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "Hubo un problema. Si el problema persiste contacte a soporte"
-          );
-      }, catchRejectedFetch)
-      .then((salesData) => {
-        setSales(salesData);
-      });
-  };
-
   const postSale = async (sale, token) => {
     const newSale = { id: sales[sales.length - 1].id + 1, ...sale };
     await fetch("http://localhost:8000/sales", {
@@ -121,7 +102,6 @@ export const APIContextProvider = ({ children }) => {
         setCart,
         putProduct,
         putUser,
-        getSales,
         postSale,
       }}
     >

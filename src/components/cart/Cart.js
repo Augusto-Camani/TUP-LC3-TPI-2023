@@ -3,22 +3,21 @@ import { useNavigate } from "react-router";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
-import { useProducts } from "../../custom/useAPIMethods/useAPIMethods";
+import {
+  useProducts,
+  useSales,
+} from "../../custom/useAPIMethods/useAPIMethods";
 import CartItem from "../cartItem/CartItem";
 
 const Cart = () => {
-  const { sales, products, cart, setCart, putProduct, getSales, postSale } =
-    useAPI();
+  const { products, cart, setCart, putProduct, postSale } = useAPI();
   const { user, accessToken } = useAuth();
   const navigate = useNavigate();
   const [sale, setSale] = useState({ userID: user.id, content: cart });
 
   useProducts();
 
-  useEffect(() => {
-    if (sales.length > 0) return;
-    getSales(accessToken());
-  }, []);
+  useSales();
 
   useEffect(
     () => setSale((prevSale) => ({ ...prevSale, content: cart })),
