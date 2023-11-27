@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Table } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
+import { useUsers } from "../../custom/useAPIMethods/useAPIMethods";
 import EditUser from "../editUser/EditUser";
 import NewUser from "../newUser/NewUser";
 
@@ -19,28 +20,7 @@ const ManagerUsers = () => {
     throw new Error("Error de servidor. Intentelo de nuevo más tarde");
   };
 
-  useEffect(() => {
-    if (users.length > 0) return;
-    toggleLoading(true);
-    fetch("http://localhost:8000/users", {
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${accessToken()}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "Hubo un problema. Si el problema persiste contacte a soporte"
-          );
-      }, catchRejectedFetch)
-      .then((usersData) => {
-        setUsers(usersData);
-      })
-      .catch((error) => console.log(error.message))
-      .finally(() => toggleLoading(false));
-  }, []);
+  useUsers();
 
   const deleteUser = async (id) => {
     toggleLoading(true);

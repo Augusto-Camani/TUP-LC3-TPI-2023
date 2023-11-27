@@ -3,7 +3,7 @@ import { Button, Table } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
-import useProducts from "../../custom/useAPIMethods/useProducts";
+import { useProducts } from "../../custom/useAPIMethods/useAPIMethods";
 import EditProduct from "../editProduct/EditProduct";
 import NewProduct from "../newProduct/NewProduct";
 

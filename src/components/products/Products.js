@@ -1,7 +1,7 @@
 import "./Products.css";
 
 import { useAPI } from "../../services/apiContext/api.context";
-import useProducts from "../../custom/useAPIMethods/useProducts";
+import { useProducts } from "../../custom/useAPIMethods/useAPIMethods";
 import ProductItem from "../productItem/ProductItem";
 
 const Products = () => {
