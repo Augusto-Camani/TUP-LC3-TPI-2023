@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
@@ -8,6 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { setUser, setAccessToken, setRefreshToken } = useAuth();
   const [userToLogin, setUserToLogin] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginHandler = async (email, password) => {
     await fetch("http://localhost:8000/login", {
@@ -33,6 +35,7 @@ const Login = () => {
         const currentUser = {
           id: response.id,
           email: response.email,
+          password: response.password,
           userType: response.userType,
           createdAt: response.createdAt,
         };
@@ -56,7 +59,11 @@ const Login = () => {
     setUserToLogin((prevUser) => ({ ...prevUser, [name]: value }));
 
   return (
-    <div className="container w-50">
+    <div
+      className="container my-3 p-3"
+      style={{ minWidth: "10rem", maxWidth: "25rem" }}
+    >
+      <h2 className="mb-5">Iniciar sesión</h2>
       <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
@@ -71,13 +78,22 @@ const Login = () => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            value={userToLogin.password}
-            onChange={changeHandler}
-            placeholder="Contraseña"
-          />
+          <InputGroup>
+            <Form.Control
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={userToLogin.password}
+              onChange={changeHandler}
+              placeholder="Contraseña"
+            />
+            <Button onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <Eye size="1.25rem" />
+              ) : (
+                <EyeSlash size="1.25rem" />
+              )}
+            </Button>
+          </InputGroup>
         </Form.Group>
         <Button className="mb-1" type="submit">
           Iniciar Sesión

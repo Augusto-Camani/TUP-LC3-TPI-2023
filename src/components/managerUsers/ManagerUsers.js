@@ -94,21 +94,21 @@ const ManagerUsers = () => {
             <tbody>
               {users.map((user, index) => (
                 <tr key={index}>
-                  <td>{user.id}</td>
+                  <td className="text-center">{user.id}</td>
                   <td>{user.email}</td>
                   <td>{user.password}</td>
-                  <td>{user.userType}</td>
+                  <td className="text-center">{user.userType}</td>
                   <td className="d-flex justify-content-evenly">
                     {idToDelete !== user.id ? (
                       <>
                         <Button
-                          className="mx-1 p-1"
+                          className="p-1"
                           onClick={() => isEditingHandler(user)}
                         >
                           Editar
                         </Button>
                         <Button
-                          className="mx-1 p-1"
+                          className="ms-1 p-1"
                           onClick={() => {
                             deleteUserHandler(user.id);
                           }}
@@ -119,13 +119,10 @@ const ManagerUsers = () => {
                     ) : (
                       isDeleting && (
                         <>
-                          <Button className="m-auto p-1" onClick={cancelDelete}>
+                          <Button className="p-1" onClick={cancelDelete}>
                             Cancelar
                           </Button>
-                          <Button
-                            className="m-auto p-1"
-                            onClick={confirmDelete}
-                          >
+                          <Button className="ms-1 p-1" onClick={confirmDelete}>
                             Confirmar
                           </Button>
                         </>

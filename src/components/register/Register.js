@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 
 const Register = () => {
   const errors = [
@@ -8,10 +9,8 @@ const Register = () => {
     "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número",
   ];
   const navigate = useNavigate();
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+  const [user, setUser] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   const registerHandler = async (email, password) => {
     await fetch("http://localhost:8000/register", {
@@ -65,7 +64,11 @@ const Register = () => {
   };
 
   return (
-    <div className="container w-50">
+    <div
+      className="container my-3 p-3"
+      style={{ minWidth: "10rem", maxWidth: "25rem" }}
+    >
+      <h2 className="mb-5">Registrarse</h2>
       <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
@@ -81,12 +84,21 @@ const Register = () => {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Contraseña</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            onChange={changeHandler}
-            placeholder="contraseña"
-          />
+          <InputGroup>
+            <Form.Control
+              type={showPassword ? "text" : "password"}
+              name="password"
+              onChange={changeHandler}
+              placeholder="contraseña"
+            />
+            <Button onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? (
+                <Eye size="1.25rem" />
+              ) : (
+                <EyeSlash size="1.25rem" />
+              )}
+            </Button>
+          </InputGroup>
         </Form.Group>
         <Button className="mb-1" type="submit">
           Registrarse

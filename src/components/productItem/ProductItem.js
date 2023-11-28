@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Button, Card, CardGroup } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
+import { useAuth } from "../../services/authenticationContext/authentication.context";
 
 const ProductItem = ({ product }) => {
+  const { user } = useAuth();
   const { cart, setCart } = useAPI();
   const productInCart = cart.find((p) => p.id === product.id);
   const [inCart, setInCart] = useState(productInCart);
@@ -49,8 +51,9 @@ const ProductItem = ({ product }) => {
 
   return (
     <Card
-      border="dark"
-      style={{ width: "17rem", height: "17rem", margin: "1rem" }}
+      border="secondary"
+      className="m-3"
+      style={{ width: "16rem", height: "12rem" }}
     >
       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
       <Card.Body className="d-flex flex-column">
@@ -59,7 +62,10 @@ const ProductItem = ({ product }) => {
         <Card.Subtitle>Disponibilidad: {product.stock}</Card.Subtitle>
         <CardGroup className="mt-auto justify-content-center">
           {!inCart ? (
-            <Button disabled={!product.stock} onClick={addToCartHandler}>
+            <Button
+              disabled={!product.stock || !user}
+              onClick={addToCartHandler}
+            >
               Agregar al carrito
             </Button>
           ) : (

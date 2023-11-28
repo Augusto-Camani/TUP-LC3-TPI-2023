@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
+import { useAPI } from "../apiContext/api.context";
+
 const AuthenticationContext = createContext();
 
 const userValue = JSON.parse(localStorage.getItem("user"));
@@ -12,6 +14,7 @@ export const useAuth = () => {
 };
 
 export const AuthenticationContextProvider = ({ children }) => {
+  const { setCart } = useAPI();
   const [user, setUser] = useState(userValue);
   const accessToken = () => Cookies.get("accessToken");
   const setAccessToken = (value) =>
@@ -58,6 +61,7 @@ export const AuthenticationContextProvider = ({ children }) => {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     setUser(null);
+    setCart([]);
   };
 
   return (

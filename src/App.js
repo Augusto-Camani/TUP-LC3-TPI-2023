@@ -19,6 +19,7 @@ import Products from "./components/products/Products";
 import Cart from "./components/cart/Cart";
 import ManagerProducts from "./components/managerProducts/ManagerProducts";
 import ManagerUsers from "./components/managerUsers/ManagerUsers";
+
 const App = () => {
   const { isLoading } = useAPI();
   const admins = ["admin", "sysadmin"];
@@ -119,13 +120,25 @@ const App = () => {
   ]);
 
   return (
-    <div className={isLoading ? "opacity-75" : undefined}>
+    <div className={isLoading ? "opacity-50 pe-none" : undefined}>
       <RouterProvider router={router} />
       {isLoading && (
         <div
-          className="spinner"
-          children={<Spinner className="d-flex m-auto" />}
-        />
+          className="vh-100 vw-100 position-fixed"
+          style={{
+            top: "50%",
+            left: "50%",
+            marginTop: "-2rem",
+            marginLeft: "-2rem",
+          }}
+        >
+          <Spinner
+            style={{
+              height: "4rem",
+              width: "4rem",
+            }}
+          />
+        </div>
       )}
     </div>
   );

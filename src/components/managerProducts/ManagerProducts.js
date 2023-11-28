@@ -97,21 +97,21 @@ const ManagerProducts = () => {
             <tbody>
               {products.map((product, index) => (
                 <tr key={index}>
-                  <td>{product.id}</td>
-                  <td>{product.instrument}</td>
-                  <td className="text-end">$ {product.price}</td>
+                  <td className="text-center">{product.id}</td>
+                  <td className="text-break">{product.instrument}</td>
+                  <td className="text-end">${product.price}</td>
                   <td className="text-end">{product.stock}</td>
                   <td className="d-flex justify-content-evenly">
                     {idToDelete !== product.id ? (
                       <>
                         <Button
-                          className="m-auto p-1"
+                          className="p-1"
                           onClick={() => isEditingHandler(product)}
                         >
                           Editar
                         </Button>
                         <Button
-                          className="m-auto p-1"
+                          className="ms-1 p-1"
                           onClick={() => {
                             deleteProductHandler(product.id);
                           }}
@@ -122,13 +122,10 @@ const ManagerProducts = () => {
                     ) : (
                       isDeleting && (
                         <>
-                          <Button className="m-auto p-1" onClick={cancelDelete}>
+                          <Button className="p-1" onClick={cancelDelete}>
                             Cancelar
                           </Button>
-                          <Button
-                            className="m-auto p-1"
-                            onClick={confirmDelete}
-                          >
+                          <Button className="ms-1 p-1" onClick={confirmDelete}>
                             Confirmar
                           </Button>
                         </>
