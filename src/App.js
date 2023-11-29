@@ -19,6 +19,7 @@ import Products from "./components/products/Products";
 import Cart from "./components/cart/Cart";
 import ManagerProducts from "./components/managerProducts/ManagerProducts";
 import ManagerUsers from "./components/managerUsers/ManagerUsers";
+import Sales from "./components/sales/Sales";
 
 const App = () => {
   const { isLoading } = useAPI();
@@ -109,11 +110,11 @@ const App = () => {
       ),
     },
     {
-      path: "/manageSales",
+      path: "/sales",
       element: (
         <Protected>
           <Navbar />
-          {/* <ManagerSales /> */}
+          <Sales />
         </Protected>
       ),
     },

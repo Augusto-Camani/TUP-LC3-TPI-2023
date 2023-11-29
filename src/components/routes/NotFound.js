@@ -9,7 +9,7 @@ const NotFound = () => {
   };
   return (
     <div className="text-center">
-      <h2 className="my-4">¡Oops! La página solicitada no fue encontrada</h2>
+      <h2 className="my-4">¡Ups! La página solicitada no fue encontrada</h2>
       <Button onClick={backToHomePageHandler}>Volver al inicio</Button>
     </div>
   );

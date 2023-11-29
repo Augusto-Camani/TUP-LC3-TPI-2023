@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { Cart } from "react-bootstrap-icons";
+import { CartFill } from "react-bootstrap-icons";
 
 import { useAuth } from "../../services/authenticationContext/authentication.context";
 
@@ -22,29 +22,31 @@ const NavBar = () => {
             {["sysadmin", "admin"].includes(
               user ? user.userType : "unsigned"
             ) && (
-              <NavDropdown title="Administrar" id="navbarScrollingDropdown">
-                {(user.userType === "admin" ||
-                  user.userType === "sysadmin") && (
-                  <>
-                    <NavDropdown.Item as={Link} to="/manageProducts">
-                      Productos
-                    </NavDropdown.Item>
-                    {/* <NavDropdown.Item as={Link} to="/manageSales">
-                        Ventas
-                      </NavDropdown.Item> */}
-                    {user.userType === "sysadmin" && (
-                      <NavDropdown.Item as={Link} to="/manageUsers">
-                        Usuarios
+              <>
+                <Nav.Link as={Link} to="/sales">
+                  Ventas
+                </Nav.Link>
+                <NavDropdown title="Administrar" id="navbarScrollingDropdown">
+                  {(user.userType === "admin" ||
+                    user.userType === "sysadmin") && (
+                    <>
+                      <NavDropdown.Item as={Link} to="/manageProducts">
+                        Productos
                       </NavDropdown.Item>
-                    )}
-                  </>
-                )}
-              </NavDropdown>
+                      {user.userType === "sysadmin" && (
+                        <NavDropdown.Item as={Link} to="/manageUsers">
+                          Usuarios
+                        </NavDropdown.Item>
+                      )}
+                    </>
+                  )}
+                </NavDropdown>
+              </>
             )}
           </Nav>
           <Nav className="ms-auto my-2 my-lg-0" navbarScroll>
             <Nav.Link className="d-flex" disabled={!user} as={Link} to="/cart">
-              <Cart size="1.5rem" />
+              <CartFill size="1.5rem" />
             </Nav.Link>
             <NavDropdown
               title="Cuenta"

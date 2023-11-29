@@ -31,34 +31,6 @@ export const useProducts = () => {
   }, []);
 };
 
-export const useUsers = () => {
-  const { toggleLoading, users, setUsers } = useAPI();
-  const { accessToken } = useAuth();
-
-  useEffect(() => {
-    if (users.length > 0) return;
-    toggleLoading(true);
-    fetch("http://localhost:8000/users", {
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${accessToken()}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) return response.json();
-        else
-          throw new Error(
-            "Hubo un problema. Si el problema persiste contacte a soporte"
-          );
-      }, catchRejectedFetch)
-      .then((usersData) => {
-        setUsers(usersData);
-      })
-      .catch((error) => console.log(error.message))
-      .finally(() => toggleLoading(false));
-  }, []);
-};
-
 export const useSales = () => {
   const { toggleLoading, sales, setSales } = useAPI();
   const { accessToken } = useAuth();
@@ -81,6 +53,34 @@ export const useSales = () => {
       }, catchRejectedFetch)
       .then((salesData) => {
         setSales(salesData);
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => toggleLoading(false));
+  }, []);
+};
+
+export const useUsers = () => {
+  const { toggleLoading, users, setUsers } = useAPI();
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (users.length > 0) return;
+    toggleLoading(true);
+    fetch("http://localhost:8000/users", {
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${accessToken()}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) return response.json();
+        else
+          throw new Error(
+            "Hubo un problema. Si el problema persiste contacte a soporte"
+          );
+      }, catchRejectedFetch)
+      .then((usersData) => {
+        setUsers(usersData);
       })
       .catch((error) => console.log(error.message))
       .finally(() => toggleLoading(false));

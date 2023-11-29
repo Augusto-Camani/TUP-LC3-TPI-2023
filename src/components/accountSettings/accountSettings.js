@@ -57,24 +57,21 @@ const AccountSettings = () => {
         if (!/\S+@\S+\.\S+/.test(newUser.email))
           throw new Error("Ingrese un E-Mail");
       }
-      if (newUser.password.length > 0) {
-        if (
-          newUser.password.length < 6 ||
-          !/\p{Lu}/u.test(newUser.password) ||
-          !/\d/.test(newUser.password)
-        ) {
-          throw new Error(
-            "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número"
-          );
-        }
+      if (
+        newUser.password.length < 6 ||
+        !/\p{Lu}/u.test(newUser.password) ||
+        !/\d/.test(newUser.password)
+      ) {
+        throw new Error(
+          "La contraseña debe contener al menos 6 caracteres, 1 mayúscula y 1 número"
+        );
       }
       toggleLoading(true);
       await putUser(
         {
           id: newUser.id,
           email: newUser.email.length > 0 ? newUser.email : user.email,
-          password:
-            newUser.password.length > 0 ? newUser.password : user.password,
+          password: newUser.password,
           userType: newUser.userType,
           createdAt: newUser.createdAt,
         },
@@ -106,7 +103,7 @@ const AccountSettings = () => {
                   name="email"
                   value={newUser.email}
                   onChange={changeHandler}
-                  placeholder={user.email}
+                  placeholder="new email"
                 />
               </Form.Group>
               <Form.Group className="mb-3">
@@ -117,7 +114,7 @@ const AccountSettings = () => {
                     name="password"
                     value={newUser.password}
                     onChange={changeHandler}
-                    placeholder={user.password}
+                    placeholder="password/new password"
                   />
                   <Button onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? (

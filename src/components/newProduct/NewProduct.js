@@ -12,8 +12,10 @@ const NewProduct = ({ handleIsAdding }) => {
   const [formValid, setFormValid] = useState(false);
 
   const postProduct = async () => {
-    const newProduct = { id: products[products.length - 1].id + 1, ...product };
-
+    const newProduct = {
+      id: products.length > 0 ? products.slice(-1)[0].id + 1 : 1,
+      ...product,
+    };
     await fetch("http://localhost:8000/products", {
       method: "POST",
       headers: {

@@ -12,7 +12,10 @@ const NewUser = ({ handleIsAdding }) => {
   const [formValid, setFormValid] = useState(false);
 
   const postUser = async () => {
-    const newUser = { id: users[users.length - 1].id + 1, ...user };
+    const newUser = {
+      id: users.length > 0 ? users.slice(-1)[0].id + 1 : 1,
+      ...user,
+    };
     await fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {

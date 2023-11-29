@@ -83,60 +83,73 @@ const ManagerProducts = () => {
         </Button>
       )}
       <div className="container d-flex justify-content-center m-auto my-5 p-3">
-        {!isEditing && !isAdding && (
-          <Table striped bordered hover className="w-auto">
-            <thead className="text-center">
-              <tr>
-                <th>ID</th>
-                <th>INSTRUMENTO</th>
-                <th>PRECIO</th>
-                <th>STOCK</th>
-                <th>OPCIONES</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td className="text-center">{product.id}</td>
-                  <td className="text-break">{product.instrument}</td>
-                  <td className="text-end">${product.price}</td>
-                  <td className="text-end">{product.stock}</td>
-                  <td className="d-flex justify-content-evenly">
-                    {idToDelete !== product.id ? (
-                      <>
-                        <Button
-                          className="p-1"
-                          onClick={() => isEditingHandler(product)}
-                        >
-                          Editar
-                        </Button>
-                        <Button
-                          className="ms-1 p-1"
-                          onClick={() => {
-                            deleteProductHandler(product.id);
-                          }}
-                        >
-                          Borrar
-                        </Button>
-                      </>
-                    ) : (
-                      isDeleting && (
+        {!isEditing &&
+          !isAdding &&
+          (products.length > 0 ? (
+            <Table striped bordered hover className="w-auto">
+              <thead className="text-center">
+                <tr>
+                  <th>ID</th>
+                  <th>INSTRUMENTO</th>
+                  <th>PRECIO</th>
+                  <th>STOCK</th>
+                  <th>OPCIONES</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product, index) => (
+                  <tr key={index}>
+                    <td className="text-center">{product.id}</td>
+                    <td className="text-break">{product.instrument}</td>
+                    <td className="text-end">${product.price}</td>
+                    <td className="text-end">{product.stock}</td>
+                    <td className="d-flex justify-content-evenly">
+                      {idToDelete !== product.id ? (
                         <>
-                          <Button className="p-1" onClick={cancelDelete}>
-                            Cancelar
+                          <Button
+                            className="p-1"
+                            onClick={() => isEditingHandler(product)}
+                          >
+                            Editar
                           </Button>
-                          <Button className="ms-1 p-1" onClick={confirmDelete}>
-                            Confirmar
+                          <Button
+                            className="ms-1 p-1"
+                            variant="danger"
+                            onClick={() => {
+                              deleteProductHandler(product.id);
+                            }}
+                          >
+                            Borrar
                           </Button>
                         </>
-                      )
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
+                      ) : (
+                        isDeleting && (
+                          <>
+                            <Button
+                              className="p-1"
+                              variant="secondary"
+                              onClick={cancelDelete}
+                            >
+                              Cancelar
+                            </Button>
+                            <Button
+                              className="ms-1 p-1"
+                              variant="danger"
+                              onClick={confirmDelete}
+                            >
+                              Confirmar
+                            </Button>
+                          </>
+                        )
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <h3>No se encontraron productos</h3>
+          ))}
         {isEditing && !isAdding && (
           <EditProduct
             product={currentProduct}

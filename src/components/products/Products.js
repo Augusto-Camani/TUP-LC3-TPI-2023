@@ -1,5 +1,3 @@
-import "./Products.css";
-
 import { useAPI } from "../../services/apiContext/api.context";
 import { useProducts } from "../../custom/useAPIMethods/useAPIMethods";
 import ProductItem from "../productItem/ProductItem";
@@ -22,7 +20,7 @@ const Products = () => {
   ));
 
   return (
-    <div className="Dashboard d-flex flex-wrap justify-content-center">
+    <div className="d-flex flex-wrap justify-content-center p-1">
       {productsMapped.length > 0 ? (
         productsMapped
       ) : (

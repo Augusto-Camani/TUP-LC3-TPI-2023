@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Button, Table } from "react-bootstrap";
 
 import { useAPI } from "../../services/apiContext/api.context";
 import { useAuth } from "../../services/authenticationContext/authentication.context";
@@ -7,7 +8,6 @@ import {
   useProducts,
   useSales,
 } from "../../custom/useAPIMethods/useAPIMethods";
-import CartItem from "../cartItem/CartItem";
 
 const Cart = () => {
   const {
@@ -33,7 +33,10 @@ const Cart = () => {
   );
 
   const postSale = async () => {
-    const newSale = { id: sales[sales.length - 1].id + 1, ...sale };
+    const newSale = {
+      id: sales.length > 0 ? sales.slice(-1)[0].id + 1 : 1,
+      ...sale,
+    };
     await fetch("http://localhost:8000/sales", {
       method: "POST",
       headers: {
@@ -82,24 +85,63 @@ const Cart = () => {
     }
   };
 
+  const removeFromCart = (id) => {
+    setCart((prevCart) => prevCart.filter((p) => p.id !== id));
+  };
+
   return (
-    <div>
+    <div
+      className="d-flex flex-column m-auto my-3"
+      style={{ minWidth: "30rem", maxWidth: "90%" }}
+    >
       {cart.length > 0 ? (
-        cart.map((product) => <CartItem product={product} setCart={setCart} />)
+        <Table striped hover className="mb-3">
+          <thead>
+            <tr>
+              <th>Instrumento</th>
+              <th className="text-end">Cantidad</th>
+              <th className="text-end">Precio</th>
+              <th className="text-end">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cart.map((product, index) => (
+              <tr key={index}>
+                <td className="text-break">{product.instrument}</td>
+                <td className="text-end">{product.quantity}</td>
+                <td className="text-end">{product.price}</td>
+                <td className="text-end">{product.quantity * product.price}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td />
+              <td />
+              <td className="text-end">
+                <b>Precio final:</b>
+              </td>
+              <td>
+                <b>
+                  $
+                  {cart.reduce(
+                    (total, item) => total + item.price * item.quantity,
+                    0
+                  )}
+                </b>
+              </td>
+            </tr>
+          </tfoot>
+        </Table>
       ) : (
         <h1>No hay productos en el carrito</h1>
       )}
-      <button
-        onClick={
-          cart.length > 0
-            ? buyHandler
-            : () => {
-                navigate("/products");
-              }
-        }
-      >
-        {cart.length > 0 ? "Finalizar compra" : "Volver a productos"}
-      </button>
+      <div className="d-flex align-self-center justify-content-between w-100 mb-3">
+        <Button variant="secondary" onClick={() => navigate("/products")}>
+          Volver a productos
+        </Button>
+        <Button variant="success">Finalizar compra</Button>
+      </div>
     </div>
   );
 };

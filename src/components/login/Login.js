@@ -35,7 +35,6 @@ const Login = () => {
         const currentUser = {
           id: response.id,
           email: response.email,
-          password: response.password,
           userType: response.userType,
           createdAt: response.createdAt,
         };

@@ -30,11 +30,18 @@ const ProductItem = ({ product }) => {
       productInCart
         ? productInCart
         : {
-            ...product,
+            id: product.id,
+            instrument: product.instrument,
+            price: product.price,
             quantity: 0,
           },
     ]);
-    setInCart({ ...product, quantity: 0 });
+    setInCart({
+      id: product.id,
+      instrument: product.instrument,
+      price: product.price,
+      quantity: 0,
+    });
   };
 
   const decreaseHandler = () =>
