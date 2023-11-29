@@ -109,6 +109,7 @@ const ManagerUsers = () => {
                         </Button>
                         <Button
                           className="ms-1 p-1"
+                          variant="danger"
                           onClick={() => {
                             deleteUserHandler(user.id);
                           }}
@@ -122,7 +123,11 @@ const ManagerUsers = () => {
                           <Button className="p-1" onClick={cancelDelete}>
                             Cancelar
                           </Button>
-                          <Button className="ms-1 p-1" onClick={confirmDelete}>
+                          <Button
+                            className="ms-1 p-1"
+                            variant="danger"
+                            onClick={confirmDelete}
+                          >
                             Confirmar
                           </Button>
                         </>

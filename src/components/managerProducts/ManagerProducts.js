@@ -125,11 +125,7 @@ const ManagerProducts = () => {
                       ) : (
                         isDeleting && (
                           <>
-                            <Button
-                              className="p-1"
-                              variant="secondary"
-                              onClick={cancelDelete}
-                            >
+                            <Button className="p-1" onClick={cancelDelete}>
                               Cancelar
                             </Button>
                             <Button
