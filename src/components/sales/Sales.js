@@ -11,7 +11,7 @@ const Sales = () => {
   const [salesFiltered, setSalesFiltered] = useState(sales);
   const [userSelected, setUserSelected] = useState(userObject);
   const salesUsers = [...new Set(sales.map((sale) => sale.userID))].map(
-    (userID) => ({ id: userID, email: users[userID - 1].email })
+    (userID) => ({ id: userID, email: users[userID - 1]?.email })
   );
 
   useUsers();
@@ -71,7 +71,7 @@ const Sales = () => {
                     <tr key={index}>
                       <td className="text-center">{sale.id}</td>
                       <td className="text-break w-auto">
-                        {users[sale.userID - 1].email}
+                        {users[sale.userID - 1]?.email}
                       </td>
                       <td className="text-break w-auto">{item.instrument}</td>
                       <td className="text-end">${item.price}</td>

@@ -112,7 +112,7 @@ const App = () => {
     {
       path: "/sales",
       element: (
-        <Protected>
+        <Protected allowedRole={admins}>
           <Navbar />
           <Sales />
         </Protected>
