@@ -140,7 +140,9 @@ const Cart = () => {
         <Button variant="secondary" onClick={() => navigate("/products")}>
           Volver a productos
         </Button>
-        <Button variant="success">Finalizar compra</Button>
+        <Button variant="success" onClick={buyHandler}>
+          Finalizar compra
+        </Button>
       </div>
     </div>
   );
