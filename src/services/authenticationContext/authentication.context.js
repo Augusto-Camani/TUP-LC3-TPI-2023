@@ -28,7 +28,7 @@ export const AuthenticationContextProvider = ({ children }) => {
 
   const refresh = async () => {
     if (!accessToken() && refreshToken()) {
-      await fetch("http://localhost:8000/refresh-token", {
+      await fetch("https://tuxguitarsapi.onrender.com/refresh-token", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ token: refreshToken() }),

@@ -16,7 +16,7 @@ const NewProduct = ({ handleIsAdding }) => {
       id: products.length > 0 ? products.slice(-1)[0].id + 1 : 1,
       ...product,
     };
-    await fetch("http://localhost:8000/products", {
+    await fetch("https://tuxguitarsapi.onrender.com/products", {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -22,7 +22,7 @@ const AccountSettings = () => {
 
   const getPurchaseHistory = async () => {
     if (purchaseHistory.length > 0) return;
-    await fetch("http://localhost:8000/sales", {
+    await fetch("https://tuxguitarsapi.onrender.com/sales", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${accessToken()}`,

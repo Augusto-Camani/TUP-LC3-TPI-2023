@@ -37,7 +37,7 @@ const Cart = () => {
       id: sales.length > 0 ? sales.slice(-1)[0].id + 1 : 1,
       ...sale,
     };
-    await fetch("http://localhost:8000/sales", {
+    await fetch("https://tuxguitarsapi.onrender.com/sales", {
       method: "POST",
       headers: {
         "content-type": "application/json",

@@ -24,7 +24,7 @@ const ManagerUsers = () => {
 
   const deleteUser = async (id) => {
     toggleLoading(true);
-    await fetch(`http://localhost:8000/users/${id}`, {
+    await fetch(`https://tuxguitarsapi.onrender.com/users/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",

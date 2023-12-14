@@ -13,7 +13,7 @@ export const useProducts = () => {
   useEffect(() => {
     if (products.length > 0) return;
     toggleLoading(true);
-    fetch("http://localhost:8000/products", {
+    fetch("https://tuxguitarsapi.onrender.com/products", {
       headers: { "content-type": "application/json" },
     })
       .then((response) => {
@@ -38,7 +38,7 @@ export const useSales = () => {
   useEffect(() => {
     if (sales.length > 0) return;
     toggleLoading(true);
-    fetch("http://localhost:8000/sales", {
+    fetch("https://tuxguitarsapi.onrender.com/sales", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${accessToken()}`,
@@ -66,7 +66,7 @@ export const useUsers = () => {
   useEffect(() => {
     if (users.length > 0) return;
     toggleLoading(true);
-    fetch("http://localhost:8000/users", {
+    fetch("https://tuxguitarsapi.onrender.com/users", {
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${accessToken()}`,

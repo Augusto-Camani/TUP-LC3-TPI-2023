@@ -16,7 +16,7 @@ const NewUser = ({ handleIsAdding }) => {
       id: users.length > 0 ? users.slice(-1)[0].id + 1 : 1,
       ...user,
     };
-    await fetch("http://localhost:8000/users", {
+    await fetch("https://tuxguitarsapi.onrender.com/users", {
       method: "POST",
       headers: {
         "content-type": "application/json",

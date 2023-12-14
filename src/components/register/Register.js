@@ -13,7 +13,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const registerHandler = async (email, password) => {
-    await fetch("http://localhost:8000/register", {
+    await fetch("https://tuxguitarsapi.onrender.com/register", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({

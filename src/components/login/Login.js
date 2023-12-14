@@ -12,7 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const loginHandler = async (email, password) => {
-    await fetch("http://localhost:8000/login", {
+    await fetch("https://tuxguitarsapi.onrender.com/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email: email, password: password }),

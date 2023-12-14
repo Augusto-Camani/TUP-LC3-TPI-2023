@@ -31,7 +31,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const putProduct = (product, token) => {
-    fetch(`http://localhost:8000/products/${product.id}`, {
+    fetch(`https://tuxguitarsapi.onrender.com/products/${product.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",
@@ -52,7 +52,7 @@ export const APIContextProvider = ({ children }) => {
   };
 
   const putUser = async (user, token) => {
-    await fetch(`http://localhost:8000/users/${user.id}`, {
+    await fetch(`https://tuxguitarsapi.onrender.com/users/${user.id}`, {
       method: "PUT",
       headers: {
         "content-type": "application/json",

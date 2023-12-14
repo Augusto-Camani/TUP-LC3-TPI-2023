@@ -20,7 +20,7 @@ const ManagerProducts = () => {
 
   const deleteProduct = async (id) => {
     toggleLoading(true);
-    await fetch(`http://localhost:8000/products/${id}`, {
+    await fetch(`https://tuxguitarsapi.onrender.com/products/${id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
